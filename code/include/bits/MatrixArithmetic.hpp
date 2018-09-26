@@ -9,6 +9,7 @@
  */
 
 #ifndef ANPI_MATRIX_ARITHMETIC_HPP
+
 #define ANPI_MATRIX_ARITHMETIC_HPP
 
 #include "Intrinsics.hpp"
@@ -151,23 +152,13 @@ regType mm_add(regType, regType); // We don't implement this to cause, at
 // return regType();
 //}
 
-
 /*
      * Substraction
      */
 
-
-
 /// We wrap the intrinsics methods to be polymorphic versions
 template <typename T, class regType>
-regType mm_subs(regType, regType); // We don't implement this to cause, at
-                                  // least, a linker error if this version is
-                                  // used.
-                                  //{
-                                  // Generic function should never be called.
-                                  // If it is called, then some SIMD chaos is going on...
-
-
+regType mm_subs(regType, regType);
 
 #ifdef __AVX512F__
 template <>
@@ -357,56 +348,66 @@ mm_add<std::int8_t>(__m128i a, __m128i b)
 
 //Substraction
 
-  template<>
-    inline __m128d __attribute__((__always_inline__))
-    mm_subs<double>(__m128d a,__m128d b) {
-      return _mm_subs_pd(a,b);
-    }
-    template<>
-    inline __m128 __attribute__((__always_inline__))
-    mm_subs<float>(__m128 a,__m128 b) {
-      return _mm_subs_ps(a,b);
-    }
-    template<>
-    inline __m128i __attribute__((__always_inline__))
-    mm_subs<std::uint64_t>(__m128i a,__m128i b) {
-      return _mm_subs_epi64(a,b);
-    }
-    template<>
-    inline __m128i __attribute__((__always_inline__))
-    mm_subs<std::int64_t>(__m128i a,__m128i b) {
-      return _mm_subs_epi64(a,b);
-    }
-    template<>
-    inline __m128i __attribute__((__always_inline__))
-    mm_subs<std::uint32_t>(__m128i a,__m128i b) {
-      return _mm_subs_epi32(a,b);
-    }
-    template<>
-    inline __m128i __attribute__((__always_inline__))
-    mm_subs<std::int32_t>(__m128i a,__m128i b) {
-      return _mm_subs_epi16(a,b);
-    }
-    template<>
-    inline __m128i __attribute__((__always_inline__))
-    mm_subs<std::uint16_t>(__m128i a,__m128i b) {
-      return _mm_subs_epi16(a,b);
-    }
-    template<>
-    inline __m128i __attribute__((__always_inline__))
-    mm_subs<std::int16_t>(__m128i a,__m128i b) {
-      return _mm_subs_epi32(a,b);
-    }
-    template<>
-    inline __m128i __attribute__((__always_inline__))
-    mm_subs<std::uint8_t>(__m128i a,__m128i b) {
-      return _mm_subs_epi16(a,b);
-    }
-    template<>
-    inline __m128i __attribute__((__always_inline__))
-    mm_subs<std::int8_t>(__m128i a,__m128i b) {
-      return _mm_subs_epi32(a,b);
-    }
+template <>
+inline __m128d __attribute__((__always_inline__))
+mm_subs<double>(__m128d a, __m128d b)
+{
+  return _mm_sub_pd(a, b);
+}
+template <>
+inline __m128 __attribute__((__always_inline__))
+mm_subs<float>(__m128 a, __m128 b)
+{
+  return _mm_sub_ps(a, b);
+}
+template <>
+inline __m128i __attribute__((__always_inline__))
+mm_subs<std::uint64_t>(__m128i a, __m128i b)
+{
+  return _mm_sub_epi64(a, b);
+}
+template <>
+inline __m128i __attribute__((__always_inline__))
+mm_subs<std::int64_t>(__m128i a, __m128i b)
+{
+  return _mm_sub_epi64(a, b);
+}
+template <>
+inline __m128i __attribute__((__always_inline__))
+mm_subs<std::uint32_t>(__m128i a, __m128i b)
+{
+  return _mm_sub_epi32(a, b);
+}
+template <>
+inline __m128i __attribute__((__always_inline__))
+mm_subs<std::int32_t>(__m128i a, __m128i b)
+{
+  return _mm_sub_epi32(a, b); //_mm_sub_epi16(a, b);
+}
+template <>
+inline __m128i __attribute__((__always_inline__))
+mm_subs<std::uint16_t>(__m128i a, __m128i b)
+{
+  return _mm_sub_epi16(a, b);
+}
+template <>
+inline __m128i __attribute__((__always_inline__))
+mm_subs<std::int16_t>(__m128i a, __m128i b)
+{
+  return _mm_sub_epi16(a, b); //_mm_sub_epi32(a, b);
+}
+template <>
+inline __m128i __attribute__((__always_inline__))
+mm_subs<std::uint8_t>(__m128i a, __m128i b)
+{
+  return _mm_sub_epi16(a, b);
+}
+template <>
+inline __m128i __attribute__((__always_inline__))
+mm_subs<std::int8_t>(__m128i a, __m128i b)
+{
+  return _mm_sub_epi32(a, b);
+}
 
 #endif
 
@@ -495,16 +496,91 @@ inline void add(Matrix<T, Alloc> &a,
      * Subtraction
      */
 
-// Fall back implementations
+////////////////////////////////////////////////////////////////////////////////////////////////////
+// On-copy implementation c=a+b
+template <typename T, class Alloc, typename regType>
+inline void subSIMD(const Matrix<T, Alloc> &a,
+                    const Matrix<T, Alloc> &b,
+                    Matrix<T, Alloc> &c)
+{
 
-// In-copy implementation c=a-b
-template <typename T, class Alloc>
+  // This method is instantiated with unaligned allocators.  We
+  // allow the instantiation although externally this is never
+  // called unaligned
+  static_assert(!extract_alignment<Alloc>::aligned ||
+                    (extract_alignment<Alloc>::value >= sizeof(regType)),
+                "Insufficient alignment for the registers used");
+
+  const size_t tentries = a.rows() * a.dcols();
+  c.allocate(a.rows(), a.cols());
+
+  regType *here = reinterpret_cast<regType *>(c.data());
+  const size_t blocks = (tentries * sizeof(T) + (sizeof(regType) - 1)) /
+                        sizeof(regType);
+  regType *const end = here + blocks;
+  const regType *aptr = reinterpret_cast<const regType *>(a.data());
+  const regType *bptr = reinterpret_cast<const regType *>(b.data());
+
+  for (; here < end;)
+  {
+    *here++ = mm_subs<T>(*aptr++, *bptr++);
+  }
+}
+
+// On-copy implementation c=a-b for SIMD-capable types
+template <typename T,
+          class Alloc,
+          typename std::enable_if<is_simd_type<T>::value, int>::type = 0>
 inline void subtract(const Matrix<T, Alloc> &a,
                      const Matrix<T, Alloc> &b,
                      Matrix<T, Alloc> &c)
 {
+
+  assert((a.rows() == b.rows()) &&
+         (a.cols() == b.cols()));
+
+  if (is_aligned_alloc<Alloc>::value)
+  {
+#ifdef __AVX512F__
+    subSIMD<T, Alloc, typename avx512_traits<T>::reg_type>(a, b, c);
+#elif __AVX__
+    subSIMD<T, Alloc, typename avx_traits<T>::reg_type>(a, b, c);
+#elif __SSE2__
+    subSIMD<T, Alloc, typename sse2_traits<T>::reg_type>(a, b, c);
+#else
+    ::anpi::fallback::substract(a, b, c);
+#endif
+  }
+  else
+  { // allocator seems to be unaligned
+    ::anpi::fallback::subtract(a, b, c);
+  }
+}
+
+// Non-SIMD types such as complex
+template <typename T,
+          class Alloc,
+          typename std::enable_if<!is_simd_type<T>::value, int>::type = 0>
+inline void subtract(const Matrix<T, Alloc> &a,
+                     const Matrix<T, Alloc> &b,
+                     Matrix<T, Alloc> &c)
+{
+
   ::anpi::fallback::subtract(a, b, c);
 }
+
+///////////////////////////////////////////////////////////////////////////////////////////////////
+
+// Fall back implementations
+
+// // In-copy implementation c=a-b
+// template <typename T, class Alloc>
+// inline void subtract(const Matrix<T, Alloc> &a,
+//                      const Matrix<T, Alloc> &b,
+//                      Matrix<T, Alloc> &c)
+// {
+//   ::anpi::fallback::subtract(a, b, c);
+// }
 
 // In-place implementation a = a-b
 template <typename T, class Alloc>
@@ -512,8 +588,9 @@ inline void subtract(Matrix<T, Alloc> &a,
                      const Matrix<T, Alloc> &b)
 {
 
-  ::anpi::fallback::subtract(a, b);
+  subtract(a, b, a);
 }
+
 } // namespace simd
 
 // The arithmetic implementation (aimpl) namespace
