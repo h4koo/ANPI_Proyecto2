@@ -28,101 +28,101 @@ BOOST_AUTO_TEST_SUITE(Matrix)
 template <typename T>
 class benchAdd
 {
-protected:
-  /// Maximum allowed size for the square matrices
-  const size_t _maxSize;
+  protected:
+    /// Maximum allowed size for the square matrices
+    const size_t _maxSize;
 
-  /// A large matrix holding
-  anpi::Matrix<T> _data;
+    /// A large matrix holding
+    anpi::Matrix<T> _data;
 
-  /// State of the benchmarked evaluation
-  anpi::Matrix<T> _a;
-  anpi::Matrix<T> _b;
-  anpi::Matrix<T> _c;
+    /// State of the benchmarked evaluation
+    anpi::Matrix<T> _a;
+    anpi::Matrix<T> _b;
+    anpi::Matrix<T> _c;
 
-public:
-  /// Construct
-  benchAdd(const size_t maxSize)
-      : _maxSize(maxSize), _data(maxSize, maxSize, anpi::DoNotInitialize)
-  {
-
-    size_t idx = 0;
-    for (size_t r = 0; r < _maxSize; ++r)
+  public:
+    /// Construct
+    benchAdd(const size_t maxSize)
+        : _maxSize(maxSize), _data(maxSize, maxSize, anpi::DoNotInitialize)
     {
-      for (size_t c = 0; c < _maxSize; ++c)
-      {
-        _data(r, c) = idx++;
-      }
-    }
-  }
 
-  /// Prepare the evaluation of given size
-  void prepare(const size_t size)
-  {
-    assert(size <= this->_maxSize);
-    this->_a = std::move(anpi::Matrix<T>(size, size, _data.data()));
-    this->_b = this->_a;
-  }
+        size_t idx = 0;
+        for (size_t r = 0; r < _maxSize; ++r)
+        {
+            for (size_t c = 0; c < _maxSize; ++c)
+            {
+                _data(r, c) = idx++;
+            }
+        }
+    }
+
+    /// Prepare the evaluation of given size
+    void prepare(const size_t size)
+    {
+        assert(size <= this->_maxSize);
+        this->_a = std::move(anpi::Matrix<T>(size, size, _data.data()));
+        this->_b = this->_a;
+    }
 };
 
 /// Provide the evaluation method for in-place addition
 template <typename T>
 class benchAddInPlaceFallback : public benchAdd<T>
 {
-public:
-  /// Constructor
-  benchAddInPlaceFallback(const size_t n) : benchAdd<T>(n) {}
+  public:
+    /// Constructor
+    benchAddInPlaceFallback(const size_t n) : benchAdd<T>(n) {}
 
-  // Evaluate add in-place
-  inline void eval()
-  {
-    anpi::fallback::add(this->_a, this->_b);
-  }
+    // Evaluate add in-place
+    inline void eval()
+    {
+        anpi::fallback::add(this->_a, this->_b);
+    }
 };
 
 /// Provide the evaluation method for on-copy addition
 template <typename T>
 class benchAddOnCopyFallback : public benchAdd<T>
 {
-public:
-  /// Constructor
-  benchAddOnCopyFallback(const size_t n) : benchAdd<T>(n) {}
+  public:
+    /// Constructor
+    benchAddOnCopyFallback(const size_t n) : benchAdd<T>(n) {}
 
-  // Evaluate add on-copy
-  inline void eval()
-  {
-    anpi::fallback::add(this->_a, this->_b, this->_c);
-  }
+    // Evaluate add on-copy
+    inline void eval()
+    {
+        anpi::fallback::add(this->_a, this->_b, this->_c);
+    }
 };
 
 /// Provide the evaluation method for in-place addition
 template <typename T>
 class benchAddInPlaceSIMD : public benchAdd<T>
 {
-public:
-  /// Constructor
-  benchAddInPlaceSIMD(const size_t n) : benchAdd<T>(n) {}
+  public:
+    /// Constructor
+    benchAddInPlaceSIMD(const size_t n) : benchAdd<T>(n) {}
 
-  // Evaluate add in-place
-  inline void eval()
-  {
-    anpi::simd::add(this->_a, this->_b);
-  }
+    // Evaluate add in-place
+    inline void eval()
+    {
+        anpi::simd::add(this->_a, this->_b);
+    }
 };
 
 /// Provide the evaluation method for on-copy addition
 template <typename T>
 class benchAddOnCopySIMD : public benchAdd<T>
 {
-public:
-  /// Constructor
-  benchAddOnCopySIMD(const size_t n) : benchAdd<T>(n) {}
+  public:
+    /// Constructor
+    benchAddOnCopySIMD(const size_t n) : benchAdd<T>(n) {}
 
-  // Evaluate add on-copy
-  inline void eval()
-  {
-    anpi::simd::add(this->_a, this->_b, this->_c);
-  }
+    // Evaluate add on-copy
+    inline void eval()
+    {
+        anpi::simd::add(this->_a, this->_b, this->_c);
+    }
 };
 
 /**
@@ -131,54 +131,54 @@ public:
 BOOST_AUTO_TEST_CASE(Add)
 {
 
-  std::vector<size_t> sizes = {24, 32, 48, 64,
-                               96, 128, 192, 256,
-                               384, 512, 768, 1024,
-                               1536, 2048, 3072, 4096};
+    std::vector<size_t> sizes = {24, 32, 48, 64,
+                                 96, 128, 192, 256,
+                                 384, 512, 768, 1024,
+                                 1536, 2048, 3072, 4096};
 
-  const size_t n = sizes.back();
-  const size_t repetitions = 100;
-  std::vector<anpi::benchmark::measurement> times;
+    const size_t n = sizes.back();
+    const size_t repetitions = 100;
+    std::vector<anpi::benchmark::measurement> times;
 
-  {
-    benchAddOnCopyFallback<float> baoc(n);
+    {
+        benchAddOnCopyFallback<float> baoc(n);
 
-    // Measure on-copy add
-    ANPI_BENCHMARK(sizes, repetitions, times, baoc);
+        // Measure on-copy add
+        ANPI_BENCHMARK(sizes, repetitions, times, baoc);
 
-    ::anpi::benchmark::write("add_on_copy_float_fb.txt", times);
-    ::anpi::benchmark::plotRange(times, "On-copy (float) fallback", "r");
-  }
+        ::anpi::benchmark::write("add_on_copy_float_fb.txt", times);
+        ::anpi::benchmark::plotRange(times, "On-copy (float) fallback", "r");
+    }
 
-  {
-    benchAddOnCopySIMD<float> baoc(n);
+    {
+        benchAddOnCopySIMD<float> baoc(n);
 
-    // Measure on-copy add
-    ANPI_BENCHMARK(sizes, repetitions, times, baoc);
+        // Measure on-copy add
+        ANPI_BENCHMARK(sizes, repetitions, times, baoc);
 
-    ::anpi::benchmark::write("add_on_copy_float_simd.txt", times);
-    ::anpi::benchmark::plotRange(times, "On-copy (float) simd", "g");
-  }
+        ::anpi::benchmark::write("add_on_copy_float_simd.txt", times);
+        ::anpi::benchmark::plotRange(times, "On-copy (float) simd", "g");
+    }
 
-  {
-    benchAddInPlaceFallback<float> baip(n);
+    {
+        benchAddInPlaceFallback<float> baip(n);
 
-    // Measure in place add
-    ANPI_BENCHMARK(sizes, repetitions, times, baip);
+        // Measure in place add
+        ANPI_BENCHMARK(sizes, repetitions, times, baip);
 
-    ::anpi::benchmark::write("add_in_place_float_fb.txt", times);
-    ::anpi::benchmark::plotRange(times, "In-place (float) fallback", "b");
-  }
+        ::anpi::benchmark::write("add_in_place_float_fb.txt", times);
+        ::anpi::benchmark::plotRange(times, "In-place (float) fallback", "b");
+    }
 
-  {
-    benchAddInPlaceSIMD<float> baip(n);
+    {
+        benchAddInPlaceSIMD<float> baip(n);
 
-    // Measure in place add
-    ANPI_BENCHMARK(sizes, repetitions, times, baip);
+        // Measure in place add
+        ANPI_BENCHMARK(sizes, repetitions, times, baip);
 
-    ::anpi::benchmark::write("add_in_place_float_simd.txt", times);
-    ::anpi::benchmark::plotRange(times, "In-place (float) simd", "m");
-  }
+        ::anpi::benchmark::write("add_in_place_float_simd.txt", times);
+        ::anpi::benchmark::plotRange(times, "In-place (float) simd", "m");
+    }
 
 #if 0
 
@@ -203,7 +203,7 @@ BOOST_AUTO_TEST_CASE(Add)
   }
 #endif
 
-  ::anpi::benchmark::show();
+    ::anpi::benchmark::show();
 }
 
 BOOST_AUTO_TEST_SUITE_END()

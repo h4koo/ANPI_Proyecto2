@@ -24,7 +24,7 @@
 namespace anpi {
   namespace benchmark {
     /**
-     * Each measurement is composed by four attributes
+     * Each measurement is composed by five attributes
      */
     struct measurement {
       inline measurement() : size(0u),average(0.),stddev(0.),min(0.),max(0.) {};
@@ -44,33 +44,7 @@ namespace anpi {
      */
     void computeStats(const std::vector<size_t>& sizes,
                       const anpi::Matrix<std::chrono::duration<double> >& mat,
-                      std::vector<measurement>& times) {
-
-      const size_t nums = sizes.size();
-      times.resize(nums);
-      for ( size_t s=0;s<nums;++s ) {
-        measurement& m = times[s];
-        m.size = sizes[s];        
-
-        double val = mat[s][0].count();
-        m.average = val;
-        m.stddev  = sqr(val);
-
-        m.min = val;
-        m.max = val;
-        
-        for ( size_t i=1;i<mat.cols();++i ) {
-          val = (mat[s][i]-mat[s][i-1]).count();
-          m.average += val;
-          m.stddev  += sqr(val);
-          m.min = std::min(m.min,val);
-          m.max = std::max(m.max,val);
-        }
-
-        m.average /= mat.cols();
-        m.stddev = std::sqrt(m.stddev/mat.cols() - sqr(m.average));
-      }
-    }
+                      std::vector<measurement>& times);
 
     /**
      * Save a file with each measurement in a row.
@@ -83,25 +57,13 @@ namespace anpi {
      * # Maximum  
      */
     void write(std::ostream& stream,
-               const std::vector<measurement>& m) {
-      for (auto i : m) {
-        stream << i.size    << " \t";
-        stream << i.average << " \t";
-        stream << i.stddev  << " \t";
-        stream << i.min     << " \t";
-        stream << i.max     << " \t" << std::endl;
-      }
-    }
+               const std::vector<measurement>& m);
 
     /**
      * Save a file with each measurement in a row
      */
     void write(const std::string& filename,
-               const std::vector<measurement>& m) {
-      std::ofstream os(filename.c_str());
-      write(os,m);
-      os.close();
-    }
+               const std::vector<measurement>& m);
 
     /**
      * Plot measurements (average only)
@@ -115,18 +77,7 @@ namespace anpi {
      */
     void plot(const std::vector<measurement>& m,
               const std::string& legend,
-              const std::string& color = "r") {
-      std::vector<double> x(m.size()),y(m.size());
-
-      for (size_t i=0;i<m.size();++i) {
-        x[i]=m[i].size;
-        y[i]=m[i].average;
-      }
-
-      static anpi::Plot2d<double> plotter;
-      plotter.initialize(1);
-      plotter.plot(x,y,legend,color);
-    }
+              const std::string& color = "r");
 
     /**
      * Plot measurements (average only)
@@ -140,26 +91,12 @@ namespace anpi {
      */
     void plotRange(const std::vector<measurement>& m,
                    const std::string& legend,
-                   const std::string& color) {
-      std::vector<double> x(m.size()),y(m.size()),miny(m.size()),maxy(m.size());
+                   const std::string& color);
 
-      for (size_t i=0;i<m.size();++i) {
-        const measurement& mi = m[i];
-        x[i]=mi.size;
-        y[i]=mi.average;
-        miny[i]=mi.min;
-        maxy[i]=mi.max;
-      }
-
-      static anpi::Plot2d<double> plotter;
-      plotter.initialize(1);
-      plotter.plot(x,y,miny,maxy,legend,color);
-    }
-    
-    void show() {
-       static anpi::Plot2d<double> plotter;
-       plotter.show();
-    }
+    /**
+     * Show all registered plots.
+     */
+    void show();
   } // namespace benchmark
 } // namespace anpi
     
