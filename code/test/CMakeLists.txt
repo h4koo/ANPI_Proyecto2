@@ -8,6 +8,7 @@ target_link_libraries (tester
                        anpi
                        ${Boost_FILESYSTEM_LIBRARY}
                        ${Boost_SYSTEM_LIBRARY}
-                       ${Boost_UNIT_TEST_FRAMEWORK_LIBRARY})
+                       ${Boost_UNIT_TEST_FRAMEWORK_LIBRARY} 
+                       ${OpenCV_LIBS})
 
 add_test(NAME tester COMMAND tester)

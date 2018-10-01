@@ -12,8 +12,30 @@ namespace anpi
 */
 bool ResistorGrid::build(const std::string filename)
 {
+    // Read the image using the OpenCV
+    cv::Mat_<float> map;
+    try
+    {
+        cv::imread(filename.c_str(),
+                   CV_LOAD_IMAGE_GRAYSCALE)
+            .convertTo(map, CV_32FC1);
+        map /= 255.0f; // normalize image range to 0 .. 255
 
-    return false;
+        // Convert the OpenCV matrix into an anpi matrix
+        // We have to use the std::allocator to avoid an exact stride
+        anpi::Matrix<float, std::allocator<float>> amapTmp(map.rows,
+                                                           map.cols,
+                                                           map.ptr<float>());
+        // And transform it to a SIMD-enabled matrix
+        anpi::Matrix<float> amap(amapTmp);
+        rawMap = amap;
+
+        return true;
+    }
+    catch (Exception e)
+    {
+        return false;
+    }
 }
 
 /**

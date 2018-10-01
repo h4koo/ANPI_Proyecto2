@@ -139,6 +139,15 @@ void testNavigate()
 
     std::cout << "\nMatrix A when initial node is top left corner and final node is bottom right corner is: \n";
     rg.printA();
+} //end test navigate
+
+void testBuild()
+{
+    // Build the name of the image in the data path
+    std::string mapPath = std::string(ANPI_DATA_PATH) + "/mapa.png";
+    ResistorGrid rg;
+    rg.build(mapPath);
+    rg.printRawMap();
 }
 
 } // namespace test
@@ -153,12 +162,11 @@ BOOST_AUTO_TEST_CASE(IndexConversion)
 }
 BOOST_AUTO_TEST_CASE(Navigate)
 {
-    anpi::test::testNavigate();
+    // anpi::test::testNavigate();
 }
 BOOST_AUTO_TEST_CASE(MapLoading)
 {
-    // anpi::test::luTest<float>(anpi::luCrout<float>, anpi::unpackCrout<float>);
-    // anpi::test::luTest<double>(anpi::luCrout<double>, anpi::unpackCrout<double>);
+    anpi::test::testBuild();
 }
 
 BOOST_AUTO_TEST_SUITE_END()
