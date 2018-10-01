@@ -37,7 +37,7 @@ void indexTest()
     Matrix<float> a(10, 10, 1);
 
     //set the Matrix in ResistorGrid class since methos use size of internal matrix
-    rg.setA(a);
+    rg.setRawMap(a);
 
     int calculatedResistor, testResistor = 10;
 
@@ -65,6 +65,7 @@ void indexTest()
     // testing for 13
     testResistor = 13;
     calculatedIndex = rg.indexToNodes(testResistor);
+    std::cout << "\ncalculated indexes: \n";
     calculatedIndex.print();
 
     calculatedResistor = rg.nodesToIndex(calculatedIndex);
@@ -75,9 +76,11 @@ void indexTest()
     // testing for 0
     testResistor = 0;
     calculatedIndex = rg.indexToNodes(testResistor);
+    std::cout << "\ncalculated indexes: \n";
     calculatedIndex.print();
 
     calculatedResistor = rg.nodesToIndex(calculatedIndex);
+
     std::cout << calculatedResistor;
 
     BOOST_CHECK(calculatedResistor == testResistor);
@@ -85,6 +88,7 @@ void indexTest()
     // testing for 19
     testResistor = 19;
     calculatedIndex = rg.indexToNodes(testResistor);
+    std::cout << "\ncalculated indexes: \n";
     calculatedIndex.print();
 
     calculatedResistor = rg.nodesToIndex(calculatedIndex);
@@ -95,6 +99,7 @@ void indexTest()
     // testing for 38
     testResistor = 38;
     calculatedIndex = rg.indexToNodes(testResistor);
+    std::cout << "\ncalculated indexes: \n";
     calculatedIndex.print();
 
     calculatedResistor = rg.nodesToIndex(calculatedIndex);
@@ -102,6 +107,39 @@ void indexTest()
 
     BOOST_CHECK(calculatedResistor == testResistor);
 } //END OF indexTest()
+
+void testNavigate()
+{
+
+    ResistorGrid rg;
+
+    //create a 3x4 Matrix filled with ones
+    Matrix<float> a(3, 4, 1);
+    a[2][1] = 0;
+
+    indexPair test = {1, 0, 1, 3};
+    //set the Matrix in ResistorGrid class since method uses size of internal matrix
+    rg.setRawMap(a);
+
+    rg.navigate(test);
+
+    std::cout << "\nMatrix A is: \n";
+    rg.printA();
+
+    //test initial top right border
+    test = {0, 0, 1, 3};
+    rg.navigate(test);
+
+    std::cout << "\nMatrix A when initial node is top left corner is: \n";
+    rg.printA();
+
+    // //test bottom right border
+    // test = {0, 0, 2, 3};
+    // rg.navigate(test);
+
+    std::cout << "\nMatrix A when initial node is top left corner and final node is bottom right corner is: \n";
+    rg.printA();
+}
 
 } // namespace test
 } // namespace anpi
@@ -113,7 +151,10 @@ BOOST_AUTO_TEST_CASE(IndexConversion)
 
     anpi::test::indexTest();
 }
-
+BOOST_AUTO_TEST_CASE(Navigate)
+{
+    anpi::test::testNavigate();
+}
 BOOST_AUTO_TEST_CASE(MapLoading)
 {
     // anpi::test::luTest<float>(anpi::luCrout<float>, anpi::unpackCrout<float>);

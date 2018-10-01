@@ -14,6 +14,12 @@
 
 namespace anpi
 {
+//posible resistance values
+const int MEGAOHM = 1000000;
+const int OHM = 1;
+const int BLACK = 0;
+const int WHITE = 1;
+
 /// Pack a  pair  of  indices  of  the  nodes  of  a  resistor
 struct indexPair
 {
@@ -57,12 +63,23 @@ class ResistorGrid
     {
         A = a;
     }
-
+    inline void setRawMap(Matrix<float> a)
+    {
+        rawMap.operator=(a);
+    }
     inline Matrix<float> getA()
     {
         return A;
     }
 
+    inline void printA()
+    {
+        anpi::printMatrix(A);
+    }
+    inline void printRawMap()
+    {
+        anpi::printMatrix(rawMap);
+    }
     /**
 * Construct the grid from the given file
 *
@@ -91,5 +108,14 @@ class ResistorGrid
 ∗ compute the indices of the resistor given the numerical representation of it
 */
     indexPair indexToNodes(const std::size_t idx);
+
+    /**
+ * Compute the vale of the resitance given by the provided index
+ * 
+ * 
+ * 
+ **/
+
+    int getResistanceValue(int indx);
 };
 } // namespace anpi
