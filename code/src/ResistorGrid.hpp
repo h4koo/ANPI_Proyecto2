@@ -75,11 +75,24 @@ class ResistorGrid
     inline void printA()
     {
         anpi::printMatrix(A);
+        std::cout << std::endl;
     }
     inline void printRawMap()
     {
         anpi::printMatrix(rawMap);
+
+        std::cout << std::endl;
     }
+    inline void printB()
+    {
+        std::cout << " \n b vector is: \n";
+        for (size_t i = 0; i < b.size(); ++i)
+        {
+            std::cout << b[i] << "  ";
+        }
+        std::cout << std::endl;
+    }
+
     /**
 * Construct the grid from the given file
 *
