@@ -571,4 +571,125 @@ int ResistorGrid::getResistanceValue(int indx)
         return OHM;
 }
 
+/**
+∗ Compute a rute of more current and create a matrix for print.
+*/
+void ResistorGrid::calculateSimplePath(const indexPair &nodes)
+{
+    int cols = rawMap.cols();
+    int rows = rawMap.rows();
+    int startNode = nodes.row1 * cols + nodes.col1;
+    int endNode = nodes.row2 * cols + nodes.col2;
+    int nodeEquationNum = cols * rows; // amount of node equations
+    int nodePtr = startNode;
+    std::vector<int> vectPath;
+    int iUp, iDown, iRight, iLeft;
+    indexPair moveRes;
+    while (nodePtr != endNode)
+    {
+        //if we are at the top border
+        if (nodePtr % cols == nodePtr)
+        {
+            //we are at the top right corner
+            if (nodePtr == cols - 1)
+            {
+                //incoming left
+                iLeft = nodePtr - 1;
+                //outgoing down
+                iDown = cols - 1;
+            }
+            else
+            {
+                //incoming left
+                iLeft = nodePtr - 1;
+                //outgoing down
+                iDown = nodePtr + cols;
+                //outgoing right
+                iRight = nodePtr;
+            } //we don't check for node 0,0 since we are skipping it
+        }
+        //if we are at the left border
+        else if (nodePtr % cols == 0)
+        {
+            //if we are at the botton left corner
+            if (nodePtr / cols == rows)
+            {
+                //incoming up
+                iUp = nodePtr - cols;
+                //outgoing right
+                iRight = nodePtr;
+            }
+            else
+            {
+                //incoming up
+                iUp = nodePtr - cols;
+                //outgoing right
+                iRight = nodePtr;
+                //outfoing down
+                iDown = nodePtr + cols;
+            }
+        }
+        //if we are at the right border
+        else if (nodePtr % cols == cols - 1)
+        {
+
+            //if we are at the botton right corner
+            if (nodePtr / cols == rows)
+            {
+                //incoming up
+                iUp = nodePtr - cols;
+                //outgoing left
+                iLeft = nodePtr - 1;
+            }
+            else
+            {
+                //incoming up
+                iUp = nodePtr - cols;
+                //outgoing down
+                iDown = nodePtr + cols - 1;
+                //incoming left
+                iLeft = nodePtr - 1;
+            }
+        }
+        //if we are at the bottom border
+        else if (nodePtr / cols == rows)
+        {
+            //all corners have been checked
+            //incoming up
+            iUp = nodePtr - cols;
+            //outgoing right
+            iRight = nodePtr;
+            //incoming left
+            iLeft = nodePtr - 1;
+        }
+
+        //not on a border and not a corner
+        else
+        {
+            //incoming up
+            iUp = nodePtr - cols;
+            //incoming left
+            iLeft = nodePtr - 1;
+            //outgoing down
+            iDown = nodePtr + cols;
+            //outgoing right
+            iRight = nodePtr;
+        }
+
+        for (int j = 0; j <= 4; j++)
+        {
+        }
+        //moveRes = indexToNodes(restencia mayor);
+        nodePtr = calcNode(moveRes.row2, moveRes.col2);
+
+    } //end while
+}
+
+int ResistorGrid::calcNode(int row, int col)
+{
+    int cols = rawMap.cols();
+    int rows = rawMap.rows();
+    return row * cols + col;
+}
+
 } // namespace anpi
