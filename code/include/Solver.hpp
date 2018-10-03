@@ -12,14 +12,14 @@
 #define ANPI_SOLVER_HPP
 #include <iostream>
 #include "LUDoolittle.hpp"
-
 #include "LUCrout.hpp"
+
 // #include "MatrixUtils.hpp"
 
 using namespace std;
 namespace anpi
 {
-
+const double TINY = 1e-22;
 /** faster method used for LU decomposition
    */
 template <typename T>
@@ -27,7 +27,7 @@ inline void lu(const anpi::Matrix<T> &A,
                anpi::Matrix<T> &LU,
                std::vector<size_t> &p)
 {
-  anpi::luDoolittle(A, LU, p);
+  anpi::luCrout(A, LU, p);
 }
 
 /** method used to create  the permutation matrix given a
@@ -72,7 +72,16 @@ void forwardSubstitution(const anpi::Matrix<T> &L,
     {
       sum += L[m][i] * x[i];
     }
-    x[m] = (b[m] - sum) / L[m][m];
+    //to avoid 0 division
+    if (L[m][m] == 0)
+    {
+      x[m] = (b[m] - sum) / T(TINY);
+    }
+    // L[m][m] = 0.1e-22; //convert 0 to a very small number
+    else
+    {
+      x[m] = (b[m] - sum) / L[m][m];
+    }
   }
 
   y = x;
@@ -104,7 +113,15 @@ void backwardSubstitution(const anpi::Matrix<T> &U,
     {
       sum += U[i][j] * w[j];
     }
-    w[i] = (y[i] - sum) / U[i][i];
+    if (U[i][i] == 0)
+    {
+      w[i] = (y[i] - sum) / T(TINY);
+    }
+    // U[i][i] = TINY; //convert 0 to a very small number
+    else
+    {
+      w[i] = (y[i] - sum) / U[i][i];
+    }
   }
 
   x = w;
