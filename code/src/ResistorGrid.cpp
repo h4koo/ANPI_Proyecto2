@@ -1,5 +1,5 @@
 #include "ResistorGrid.hpp"
-
+#include "Solver.hpp"
 namespace anpi
 {
 
