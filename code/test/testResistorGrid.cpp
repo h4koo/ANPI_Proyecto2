@@ -143,6 +143,8 @@ void testNavigate()
     rg.printA();
 
     rg.printB();
+
+    rg.printX();
 } //end test navigate
 
 void testBuild()

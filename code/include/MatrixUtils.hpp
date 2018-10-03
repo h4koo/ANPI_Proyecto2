@@ -6,12 +6,26 @@ namespace anpi
 
 //---------------------------------------helping functions Tarea 4-----------------------------------//
 template <class T, typename Alloc = typename anpi::aligned_row_allocator<T>>
-void printMatrix(anpi::Matrix<T, Alloc> &A)
+inline void printMatrix(anpi::Matrix<T, Alloc> &A)
 {
     int r = A.rows(), c = A.cols();
     for (int i = 0; i < r; ++i)
     {
         for (int j = 0; j < c; ++j)
+        {
+            std::cout << A[i][j] << "  ";
+        }
+        std::cout << std::endl;
+    }
+}
+
+template <class T>
+inline void printMatrix(anpi::Matrix<T> &A)
+{
+    int n = A.cols();
+    for (int i = 0; i < n; ++i)
+    {
+        for (int j = 0; j < n; ++j)
         {
             std::cout << A[i][j] << "  ";
         }

@@ -452,6 +452,9 @@ bool ResistorGrid::navigate(const indexPair &nodes)
     }
     //############################## end grid equations #################################
 
+    //solve the equation system
+    anpi::solveLU(A, x, b);
+
     return true;
 }
 

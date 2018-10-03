@@ -3,6 +3,8 @@
 
 #include <AnpiConfig.hpp>
 
+#include "Solver.hpp"
+
 #include "MatrixUtils.hpp"
 #include <string>
 
@@ -52,6 +54,8 @@ class ResistorGrid
     Matrix<float> A;
     ///  Vector  of  the  current  equation  system
     std::vector<float> b;
+    ///  Vector  of solutions for the  current  equation  system
+    std::vector<float> x;
     /// Raw map data
     Matrix<float> rawMap;
 
@@ -89,6 +93,15 @@ class ResistorGrid
         for (size_t i = 0; i < b.size(); ++i)
         {
             std::cout << b[i] << "  ";
+        }
+        std::cout << std::endl;
+    }
+    inline void printX()
+    {
+        std::cout << " \n x vector is: \n";
+        for (size_t i = 0; i < x.size(); ++i)
+        {
+            std::cout << x[i] << "  ";
         }
         std::cout << std::endl;
     }
