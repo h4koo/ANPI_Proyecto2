@@ -125,6 +125,7 @@ void testNavigate()
 
     std::cout << "\nMatrix A is: \n";
     rg.printA();
+    rg.printB();
 
     //test initial top right border
     test = {0, 0, 1, 3};
@@ -132,6 +133,7 @@ void testNavigate()
 
     std::cout << "\nMatrix A when initial node is top left corner is: \n";
     rg.printA();
+    rg.printB();
 
     // //test bottom right border
     // test = {0, 0, 2, 3};
@@ -139,6 +141,10 @@ void testNavigate()
 
     std::cout << "\nMatrix A when initial node is top left corner and final node is bottom right corner is: \n";
     rg.printA();
+
+    rg.printB();
+
+    rg.printX();
 } //end test navigate
 
 void testBuild()
@@ -162,11 +168,11 @@ BOOST_AUTO_TEST_CASE(IndexConversion)
 }
 BOOST_AUTO_TEST_CASE(Navigate)
 {
-    // anpi::test::testNavigate();
+    anpi::test::testNavigate();
 }
 BOOST_AUTO_TEST_CASE(MapLoading)
 {
-    anpi::test::testBuild();
+    // anpi::test::testBuild();
 }
 
 BOOST_AUTO_TEST_SUITE_END()

@@ -60,7 +60,8 @@ bool ResistorGrid::navigate(const indexPair &nodes)
     //initialize A & b
     ResistorGrid::A.allocate(resistors, resistors);
     ResistorGrid::A.fill(0.f);
-    ResistorGrid::b.resize(resistors, 0);
+    std::vector<float> btemp(resistors, 0);
+    ResistorGrid::b = btemp;
 
     //************************************************* node equations ************************************************************************************
     int nodePtr;
@@ -80,7 +81,7 @@ bool ResistorGrid::navigate(const indexPair &nodes)
                 b[startNode] = 1;
                 b[endNode - 1] = -1;
             }
-            if (endNode == 0)
+            else if (endNode == 0)
             {
                 b[startNode - 1] = 1;
                 b[endNode] = -1;
@@ -450,6 +451,9 @@ bool ResistorGrid::navigate(const indexPair &nodes)
         ++gridPtr;
     }
     //############################## end grid equations #################################
+
+    //solve the equation system
+    anpi::solveLU(A, x, b);
 
     return true;
 }
