@@ -11,7 +11,7 @@
             "program": "${workspaceFolder}/build/bin/tester",
             "args": [
                 "-t",
-                "ResistorGrid"
+                "ResistorGrid/Navigate"
             ],
             "stopAtEntry": false,
             "cwd": "${workspaceFolder}/build/bin/",

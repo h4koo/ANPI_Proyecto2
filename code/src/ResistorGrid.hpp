@@ -17,7 +17,7 @@
 namespace anpi
 {
 //posible resistance values
-const int MEGAOHM = 1000000;
+const int MEGAOHM = 1000;
 const int OHM = 1;
 const int BLACK = 0;
 const int WHITE = 1;
@@ -51,27 +51,35 @@ class ResistorGrid
 {
   private:
     ///  Matrix  of  the  current  equation  system
-    Matrix<float> A;
+    Matrix<double> A;
     ///  Vector  of  the  current  equation  system
-    std::vector<float> b;
+    std::vector<double> b;
     ///  Vector  of solutions for the  current  equation  system
-    std::vector<float> x;
+    std::vector<double> x;
     /// Raw map data
     Matrix<float> rawMap;
 
   public:
     ///  . . .  constructors  and  other  methods
 
+    // inline void initializeForTesting(int x, int y)
+    // {
+    //     rawMap.allocate(x, y);
+    //     rawMap.fill(1);
+    //     rawMap[3][3] = 0;
+    //     rawMap[2][2] = 0;
+    // }
+
     //getters and setters
-    inline void setA(Matrix<float> a)
+    inline void setA(Matrix<double> a)
     {
         A = a;
     }
     inline void setRawMap(Matrix<float> a)
     {
-        rawMap.operator=(a);
+        rawMap = Matrix<float>(a);
     }
-    inline Matrix<float> getA()
+    inline Matrix<double> getA()
     {
         return A;
     }
