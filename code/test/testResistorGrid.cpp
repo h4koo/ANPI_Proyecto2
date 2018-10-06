@@ -114,35 +114,40 @@ void testNavigate()
     ResistorGrid rg;
 
     //create a 3x4 Matrix filled with ones
-    Matrix<float> a(3, 4, 1);
-    a[2][1] = 0;
+    // Matrix<float> a(3, 4, 1);
+    // a[2][1] = 0;
 
     indexPair test = {1, 0, 1, 3};
-    //set the Matrix in ResistorGrid class since method uses size of internal matrix
-    rg.setRawMap(a);
+    // set the Matrix in ResistorGrid class since method uses size of internal matrix
+    // rg.setRawMap(a);
+
+    std::string mapPath = std::string(ANPI_DATA_PATH) + "/mapa.png";
+    // ResistorGrid rg;
+    rg.build(mapPath);
+    // rg.printRawMap();
 
     rg.navigate(test);
 
     std::cout << "\nMatrix A is: \n";
-    rg.printA();
-    rg.printB();
+    // rg.printA();
+    // rg.printB();
 
     //test initial top right border
-    test = {0, 0, 1, 3};
+    test = {0, 0, 2, 3};
     rg.navigate(test);
 
     std::cout << "\nMatrix A when initial node is top left corner is: \n";
-    rg.printA();
-    rg.printB();
+    // rg.printA();
+    // rg.printB();
 
     // //test bottom right border
     // test = {0, 0, 2, 3};
     // rg.navigate(test);
 
-    std::cout << "\nMatrix A when initial node is top left corner and final node is bottom right corner is: \n";
-    rg.printA();
+    // std::cout << "\nMatrix A when initial node is top left corner and final node is bottom right corner is: \n";
+    // rg.printA();
 
-    rg.printB();
+    // rg.printB();
 
     rg.printX();
 } //end test navigate
@@ -153,7 +158,7 @@ void testBuild()
     std::string mapPath = std::string(ANPI_DATA_PATH) + "/mapa.png";
     ResistorGrid rg;
     rg.build(mapPath);
-    rg.printRawMap();
+    // rg.printRawMap();
 }
 
 } // namespace test

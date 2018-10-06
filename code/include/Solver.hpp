@@ -19,7 +19,7 @@
 using namespace std;
 namespace anpi
 {
-const double TINY = 1e-22;
+// const double TINY = 1e-40;
 /** faster method used for LU decomposition
    */
 template <typename T>
@@ -150,9 +150,9 @@ bool solveLU(const anpi::Matrix<T> &A,
              std::vector<T> &x,
              const std::vector<T> &b)
 {
-  cout << "Datos de la matriz A" << endl;
-  datosMatrix(A);
-  cout << "                    " << endl;
+  // cout << "Datos de la matriz A" << endl;
+  // // datosMatrix(A);
+  // cout << "                    " << endl;
   anpi::Matrix<T> LU;
   std::vector<size_t> p;
   anpi::lu(A, LU, p);
@@ -163,19 +163,21 @@ bool solveLU(const anpi::Matrix<T> &A,
 
   anpi::Matrix<T> P;
   anpi::permutationMatrix(p, P);
+
   // // anpi::Matrix<T>PB = P * b; //ERRROR
-  cout << "Datos de la matriz A" << endl;
-  datosMatrix(A);
-  cout << "                    " << endl;
-  cout << "Datos de la matriz L" << endl;
-  datosMatrix(L);
-  cout << "                    " << endl;
-  cout << "Datos de la matriz U" << endl;
-  datosMatrix(U);
-  cout << "                    " << endl;
-  cout << "Datos de la matriz P" << endl;
-  datosMatrix(P);
-  cout << "                    " << endl;
+  // cout << "Datos de la matriz A" << endl;
+  // datosMatrix(A);
+  // cout << "                    " << endl;
+  // cout << "Datos de la matriz L" << endl;
+  // datosMatrix(L);
+  // cout << "                    " << endl;
+  // cout << "Datos de la matriz U" << endl;
+  // // datosMatrix(U);
+  // cout << "                    " << endl;
+  // cout << "Datos de la matriz P" << endl;
+  // datosMatrix(P);
+  // cout << "                    " << endl;
+
   std::vector<T> Pb(P.rows());
 
   // for (int i = 0; i < PB.rows(); i++)

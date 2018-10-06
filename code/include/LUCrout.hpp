@@ -20,7 +20,7 @@
 
 namespace anpi
 {
-
+const double TINY = 1e-40;
 /**
    * Auxiliary method used to debug LU decomposition.
    *
@@ -169,7 +169,8 @@ void luCrout(const Matrix<T> &A,
     for (i = k + 1; i < n; i++)
     {
       if (LU[k][k] == 0)
-        throw anpi::Exception("Singular Matrix, pivot element is zero");
+        LU[k][k] = TINY;
+      // throw anpi::Exception("Singular Matrix, pivot element is zero");
 
       temp = LU[i][k] /= LU[k][k]; // Divide by the pivot element.
       for (j = k + 1; j < n; j++)

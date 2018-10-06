@@ -60,7 +60,7 @@ bool ResistorGrid::navigate(const indexPair &nodes)
     //initialize A & b
     ResistorGrid::A.allocate(resistors, resistors);
     ResistorGrid::A.fill(0.f);
-    std::vector<float> btemp(resistors, 0);
+    std::vector<double> btemp(resistors, 0);
     ResistorGrid::b = btemp;
 
     //************************************************* node equations ************************************************************************************
@@ -74,6 +74,7 @@ bool ResistorGrid::navigate(const indexPair &nodes)
         {
             //so we eliminate node 0,1
 
+            //assign b values
             //since we are removing the second equation the indexes of the start and end nodes change depending if
             //one of them is the first node
             if (startNode == 0)
@@ -104,7 +105,7 @@ bool ResistorGrid::navigate(const indexPair &nodes)
                 if (nodePtr % cols == nodePtr)
                 {
                     //if we are at the top left corner
-                    if (i == 0)
+                    if (nodePtr == 0)
                     {
                         //incoming right
                         A[i][nodePtr] = 1;
@@ -113,7 +114,7 @@ bool ResistorGrid::navigate(const indexPair &nodes)
                     }
 
                     //we are at the top right corner
-                    if (i == cols - 1)
+                    if (nodePtr == cols - 1)
                     {
                         //incoming left
                         A[i][nodePtr - 1] = 1;
@@ -218,7 +219,7 @@ bool ResistorGrid::navigate(const indexPair &nodes)
                 if (nodePtr % cols == nodePtr)
                 {
                     //if we are at the top left corner
-                    if (i == 0)
+                    if (nodePtr == 0)
                     {
                         //incoming right
                         A[i][nodePtr] = 1;
@@ -227,7 +228,7 @@ bool ResistorGrid::navigate(const indexPair &nodes)
                     }
 
                     //we are at the top right corner
-                    if (i == cols - 1)
+                    if (nodePtr == cols - 1)
                     {
                         //incoming left
                         A[i][nodePtr - 1] = 1;
@@ -333,7 +334,7 @@ bool ResistorGrid::navigate(const indexPair &nodes)
             if (nodePtr % cols == nodePtr)
             {
                 //we are at the top right corner
-                if (i == cols - 1)
+                if (nodePtr == cols - 1)
                 {
                     //incoming left
                     A[i][nodePtr - 1] = 1;
