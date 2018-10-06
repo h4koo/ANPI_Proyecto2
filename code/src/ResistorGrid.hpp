@@ -150,8 +150,13 @@ class ResistorGrid
     void calculateSimplePath(const indexPair &nodes);
 
     /**
-    ∗ Compute a rute of more current and create a matrix for print.
+    ∗ Calculate a node in matrix.
     */
     int calcNode(int row, int col);
+
+    /**
+    ∗ Calculate more current number.
+    */
+    int calcCurrent(int Up, int Dowm, int Right, int Left);
 };
 } // namespace anpi

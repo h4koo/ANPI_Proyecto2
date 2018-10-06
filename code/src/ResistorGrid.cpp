@@ -577,6 +577,7 @@ int ResistorGrid::getResistanceValue(int indx)
 
 /**
 ∗ Compute a rute of more current and create a matrix for print.
+*Se necesita hacer pruebas
 */
 void ResistorGrid::calculateSimplePath(const indexPair &nodes)
 {
@@ -587,7 +588,7 @@ void ResistorGrid::calculateSimplePath(const indexPair &nodes)
     int nodeEquationNum = cols * rows; // amount of node equations
     int nodePtr = startNode;
     std::vector<int> vectPath;
-    int iUp, iDown, iRight, iLeft;
+    int iUp, iDown, iRight, iLeft, iMax;
     indexPair moveRes;
     while (nodePtr != endNode)
     {
@@ -680,12 +681,17 @@ void ResistorGrid::calculateSimplePath(const indexPair &nodes)
             iRight = nodePtr;
         }
 
-        for (int j = 0; j <= 4; j++)
+        vectPath.push_back(nodePtr);
+        iMax = calcCurrent(iUp, iDown, iRight, iLeft);
+        moveRes = indexToNodes(iMax);
+        if (x[iMax] < 0)
         {
+            nodePtr = calcNode(moveRes.row1, moveRes.col1);
         }
-        //moveRes = indexToNodes(restencia mayor);
-        nodePtr = calcNode(moveRes.row2, moveRes.col2);
-
+        else
+        {
+            nodePtr = calcNode(moveRes.row2, moveRes.col2);
+        }
     } //end while
 }
 
@@ -694,6 +700,24 @@ int ResistorGrid::calcNode(int row, int col)
     int cols = rawMap.cols();
     int rows = rawMap.rows();
     return row * cols + col;
+}
+
+int ResistorGrid::calcCurrent(int up, int down, int right, int left)
+{
+    //Calcular mayo resistencia
+    int iMax = up;
+    if (std::abs(x[iMax]) < std::abs(x[down]))
+    {
+        iMax = down;
+    }
+    if (std::abs(x[iMax]) < std::abs(x[right]))
+    {
+        iMax = right;
+    }
+    if (std::abs(x[iMax]) < std::abs(x[left]))
+    {
+        iMax = left;
+    }
 }
 
 } // namespace anpi
