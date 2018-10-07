@@ -22,8 +22,8 @@ inline void printMatrix(anpi::Matrix<T, Alloc> &A)
 template <class T>
 inline void printMatrix(anpi::Matrix<T> &A)
 {
-    int n = A.cols();
-    for (int i = 0; i < n; ++i)
+    int n = A.cols(), height = A.rows();
+    for (int i = 0; i < height; ++i)
     {
         for (int j = 0; j < n; ++j)
         {

@@ -57,11 +57,11 @@ void forwardSubstitution(const anpi::Matrix<T> &L,
 {
 
   int n = L.rows();
-  std::vector<T> x(n);
-  for (int i = 0; i < n; i++)
-  {
-    x[i] = T(1);
-  }
+  std::vector<T> x(n, 1);
+  // for (int i = 0; i < n; i++)
+  // {
+  //   x[i] = T(1);
+  // }
 
   T sum;
 
@@ -94,17 +94,25 @@ void backwardSubstitution(const anpi::Matrix<T> &U,
                           std::vector<T> &x)
 {
   int n = U.cols();
-  std::vector<T> w;
-  w.resize(n);
+  std::vector<T> w(n, 1);
+  // w.resize(n);
 
-  for (int i = 0; i < n; i++)
-  {
-    w[i] = T(1);
-  }
+  // for (int i = 0; i < n; i++)
+  // {
+  //   w[i] = T(1);
+  // }
 
   T sum;
 
-  w[n - 1] = y[n - 1] / U[n - 1][n - 1];
+  if (U[n - 1][n - 1] == 0)
+  {
+    w[n - 1] = y[n - 1] / T(TINY);
+  }
+  // U[i][i] = TINY; //convert 0 to a very small number
+  else
+  {
+    w[n - 1] = y[n - 1] / U[n - 1][n - 1];
+  }
 
   for (int i = (n - 2); i >= 0; i--)
   {
@@ -165,18 +173,18 @@ bool solveLU(const anpi::Matrix<T> &A,
   anpi::permutationMatrix(p, P);
 
   // // anpi::Matrix<T>PB = P * b; //ERRROR
-  // cout << "Datos de la matriz A" << endl;
-  // datosMatrix(A);
-  // cout << "                    " << endl;
-  // cout << "Datos de la matriz L" << endl;
-  // datosMatrix(L);
-  // cout << "                    " << endl;
-  // cout << "Datos de la matriz U" << endl;
-  // // datosMatrix(U);
-  // cout << "                    " << endl;
-  // cout << "Datos de la matriz P" << endl;
-  // datosMatrix(P);
-  // cout << "                    " << endl;
+  cout << "Datos de la matriz A" << endl;
+  datosMatrix(A);
+  cout << "                    " << endl;
+  cout << "Datos de la matriz L" << endl;
+  datosMatrix(L);
+  cout << "                    " << endl;
+  cout << "Datos de la matriz U" << endl;
+  datosMatrix(U);
+  cout << "                    " << endl;
+  cout << "Datos de la matriz P" << endl;
+  datosMatrix(P);
+  cout << "                    " << endl;
 
   std::vector<T> Pb(P.rows());
 

@@ -44,6 +44,8 @@ bool ResistorGrid::build(const std::string filename)
 bool ResistorGrid::navigate(const indexPair &nodes)
 {
     int cols = rawMap.cols(), rows = rawMap.rows();
+    if (cols == 0 || rows == 0)
+        throw anpi::Exception(" No raw map loaded\n");
     int resistors = cols * rows * 2 - (cols + rows);       //total amount of resistors and equations
     int nodeEquationNum = cols * rows;                     // amount of node equations
     int gridEquationNum = cols * rows - (cols + rows) + 1; //amount of grid equations
@@ -110,23 +112,23 @@ bool ResistorGrid::navigate(const indexPair &nodes)
                         //incoming right
                         A[i][nodePtr] = 1;
                         //outgoing down
-                        A[i][nodePtr + cols] = -1;
+                        A[i][nodePtr + cols - 1] = -1;
                     }
 
                     //we are at the top right corner
-                    if (nodePtr == cols - 1)
+                    else if (nodePtr == cols - 1)
                     {
                         //incoming left
                         A[i][nodePtr - 1] = 1;
                         //outgoing down
-                        A[i][nodePtr + cols] = -1;
+                        A[i][nodePtr + cols - 1] = -1;
                     }
                     else
                     {
                         //incoming left
                         A[i][nodePtr - 1] = 1;
                         //outgoing down
-                        A[i][nodePtr + cols] = -1;
+                        A[i][nodePtr + cols - 1] = -1;
                         //outgoing right
                         A[i][nodePtr] = -1;
                     }
@@ -134,42 +136,42 @@ bool ResistorGrid::navigate(const indexPair &nodes)
                 //if we are at the left border
                 else if (nodePtr % cols == 0)
                 {
-                    //if we are at the botton left corner
+                    //if we are at the bottom left corner
                     if (nodePtr / cols == rows)
                     {
                         //incoming up
-                        A[i][nodePtr - cols] = 1;
+                        A[i][nodePtr - cols - 1] = 1;
                         //outgoing right
                         A[i][nodePtr] = -1;
                     }
                     else
                     {
                         //incoming up
-                        A[i][nodePtr - cols] = 1;
+                        A[i][nodePtr - cols - 1] = 1;
                         //outgoing right
                         A[i][nodePtr] = -1;
                         //outfoing down
-                        A[i][nodePtr + cols] = -1;
+                        A[i][nodePtr + cols - 1] = -1;
                     }
                 }
                 //if we are at the right border
                 else if (nodePtr % cols == cols - 1)
                 {
 
-                    //if we are at the botton right corner
+                    //if we are at the bottom right corner
                     if (nodePtr / cols == rows)
                     {
                         //incoming up
-                        A[i][nodePtr - cols] = 1;
+                        A[i][nodePtr - cols - 1] = 1;
                         //outgoing left
                         A[i][nodePtr - 1] = -1;
                     }
                     else
                     {
                         //incoming up
-                        A[i][nodePtr - cols] = 1;
+                        A[i][nodePtr - cols - 1] = 1;
                         //outgoing down
-                        A[i][nodePtr + cols] = -1;
+                        A[i][nodePtr + cols - 1] = -1;
                         //incoming left
                         A[i][nodePtr - 1] = 1;
                     }
@@ -179,7 +181,7 @@ bool ResistorGrid::navigate(const indexPair &nodes)
                 {
                     //all borders have been checked
                     //incoming up
-                    A[i][nodePtr - cols] = 1;
+                    A[i][nodePtr - cols - 1] = 1;
                     //outgoing right
                     A[i][nodePtr] = -1;
                     //incoming left
@@ -189,11 +191,11 @@ bool ResistorGrid::navigate(const indexPair &nodes)
                 else
                 {
                     //incoming up
-                    A[i][nodePtr - cols] = 1;
+                    A[i][nodePtr - cols - 1] = 1;
                     //incoming left
                     A[i][nodePtr - 1] = 1;
                     //outgoing down
-                    A[i][nodePtr + cols] = -1;
+                    A[i][nodePtr + cols - 1] = -1;
                     //outgoing right
                     A[i][nodePtr] = -1;
                 }
@@ -224,23 +226,23 @@ bool ResistorGrid::navigate(const indexPair &nodes)
                         //incoming right
                         A[i][nodePtr] = 1;
                         //outgoing down
-                        A[i][nodePtr + cols] = -1;
+                        A[i][nodePtr + cols - 1] = -1;
                     }
 
                     //we are at the top right corner
-                    if (nodePtr == cols - 1)
+                    else if (nodePtr == cols - 1)
                     {
                         //incoming left
                         A[i][nodePtr - 1] = 1;
                         //outgoing down
-                        A[i][nodePtr + cols] = -1;
+                        A[i][nodePtr + cols - 1] = -1;
                     }
                     else
                     {
                         //incoming left
                         A[i][nodePtr - 1] = 1;
                         //outgoing down
-                        A[i][nodePtr + cols] = -1;
+                        A[i][nodePtr + cols - 1] = -1;
                         //outgoing right
                         A[i][nodePtr] = -1;
                     }
@@ -252,18 +254,18 @@ bool ResistorGrid::navigate(const indexPair &nodes)
                     if (nodePtr / cols == rows)
                     {
                         //incoming up
-                        A[i][nodePtr - cols] = 1;
+                        A[i][nodePtr - cols - 1] = 1;
                         //outgoing right
                         A[i][nodePtr] = -1;
                     }
                     else
                     {
                         //incoming up
-                        A[i][nodePtr - cols] = 1;
+                        A[i][nodePtr - cols - 1] = 1;
                         //outgoing right
                         A[i][nodePtr] = -1;
                         //outfoing down
-                        A[i][nodePtr + cols] = -1;
+                        A[i][nodePtr + cols - 1] = -1;
                     }
                 }
                 //if we are at the right border
@@ -283,9 +285,9 @@ bool ResistorGrid::navigate(const indexPair &nodes)
                     //we don't check for node n,m since we are skipping it
                     {
                         //incoming up
-                        A[i][nodePtr - cols] = 1;
+                        A[i][nodePtr - cols - 1] = 1;
                         //outgoing down
-                        A[i][nodePtr + cols] = -1;
+                        A[i][nodePtr + cols - 1] = -1;
                         //incoming left
                         A[i][nodePtr - 1] = 1;
                     }
@@ -295,7 +297,7 @@ bool ResistorGrid::navigate(const indexPair &nodes)
                 {
                     //all borders have been checked
                     //incoming up
-                    A[i][nodePtr - cols] = 1;
+                    A[i][nodePtr - cols - 1] = 1;
                     //outgoing right
                     A[i][nodePtr] = -1;
                     //incoming left
@@ -305,11 +307,11 @@ bool ResistorGrid::navigate(const indexPair &nodes)
                 else
                 {
                     //incoming up
-                    A[i][nodePtr - cols] = 1;
+                    A[i][nodePtr - cols - 1] = 1;
                     //incoming left
                     A[i][nodePtr - 1] = 1;
                     //outgoing down
-                    A[i][nodePtr + cols] = -1;
+                    A[i][nodePtr + cols - 1] = -1;
                     //outgoing right
                     A[i][nodePtr] = -1;
                 }
@@ -346,7 +348,7 @@ bool ResistorGrid::navigate(const indexPair &nodes)
                     //incoming left
                     A[i][nodePtr - 1] = 1;
                     //outgoing down
-                    A[i][nodePtr + cols] = -1;
+                    A[i][nodePtr + cols - 1] = -1;
                     //outgoing right
                     A[i][nodePtr] = -1;
                 } //we don't check for node 0,0 since we are skipping it
@@ -354,29 +356,29 @@ bool ResistorGrid::navigate(const indexPair &nodes)
             //if we are at the left border
             else if (nodePtr % cols == 0)
             {
-                //if we are at the botton left corner
+                //if we are at the bottom left corner
                 if (nodePtr / cols == rows)
                 {
                     //incoming up
-                    A[i][nodePtr - cols] = 1;
+                    A[i][nodePtr - cols - 1] = 1;
                     //outgoing right
                     A[i][nodePtr] = -1;
                 }
                 else
                 {
                     //incoming up
-                    A[i][nodePtr - cols] = 1;
+                    A[i][nodePtr - cols - 1] = 1;
                     //outgoing right
                     A[i][nodePtr] = -1;
                     //outfoing down
-                    A[i][nodePtr + cols] = -1;
+                    A[i][nodePtr + cols - 1] = -1;
                 }
             }
             //if we are at the right border
             else if (nodePtr % cols == cols - 1)
             {
 
-                //if we are at the botton right corner
+                //if we are at the bottom right corner
                 if (nodePtr / cols == rows)
                 {
                     //incoming up
@@ -387,9 +389,9 @@ bool ResistorGrid::navigate(const indexPair &nodes)
                 else
                 {
                     //incoming up
-                    A[i][nodePtr - cols] = 1;
+                    A[i][nodePtr - cols - 1] = 1;
                     //outgoing down
-                    A[i][nodePtr + cols] = -1;
+                    A[i][nodePtr + cols - 1] = -1;
                     //incoming left
                     A[i][nodePtr - 1] = 1;
                 }
@@ -399,7 +401,7 @@ bool ResistorGrid::navigate(const indexPair &nodes)
             {
                 //all corners have been checked
                 //incoming up
-                A[i][nodePtr - cols] = 1;
+                A[i][nodePtr - cols - 1] = 1;
                 //outgoing right
                 A[i][nodePtr] = -1;
                 //incoming left
@@ -410,11 +412,11 @@ bool ResistorGrid::navigate(const indexPair &nodes)
             else
             {
                 //incoming up
-                A[i][nodePtr - cols] = 1;
+                A[i][nodePtr - cols - 1] = 1;
                 //incoming left
                 A[i][nodePtr - 1] = 1;
                 //outgoing down
-                A[i][nodePtr + cols] = -1;
+                A[i][nodePtr + cols - 1] = -1;
                 //outgoing right
                 A[i][nodePtr] = -1;
             }
@@ -590,6 +592,7 @@ void ResistorGrid::calculateSimplePath(const indexPair &nodes)
     std::vector<int> vectPath;
     int iUp, iDown, iRight, iLeft;
     indexPair moveRes;
+
     while (nodePtr != endNode)
     {
         //if we are at the top border

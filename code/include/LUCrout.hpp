@@ -20,7 +20,8 @@
 
 namespace anpi
 {
-const double TINY = 1e-40;
+
+const double TINY = 1e-22;
 /**
    * Auxiliary method used to debug LU decomposition.
    *
