@@ -58,6 +58,8 @@ class ResistorGrid
     std::vector<double> x;
     /// Raw map data
     Matrix<float> rawMap;
+    ///  Vector  with the nodes to follow simple path
+    std::vector<int> simplePath;
 
   public:
     ///  . . .  constructors  and  other  methods
@@ -113,7 +115,15 @@ class ResistorGrid
         }
         std::cout << std::endl;
     }
-
+    inline void printSimplePath()
+    {
+        std::cout << " \n x vector is: \n";
+        for (size_t i = 0; i < simplePath.size(); ++i)
+        {
+            std::cout << simplePath[i] << "  ";
+        }
+        std::cout << std::endl;
+    }
     /**
 * Construct the grid from the given file
 *

@@ -120,7 +120,7 @@ void testNavigate()
     indexPair test = {1, 0, 0, 2};
     // set the Matrix in ResistorGrid class since method uses size of internal matrix
     // rg.setRawMap(a);
-    std::string mapPath = std::string(ANPI_DATA_PATH) + "/3x2blank.png";
+    std::string mapPath = std::string(ANPI_DATA_PATH) + "/5x4map.png";
     // ResistorGrid rg;
     rg.build(mapPath);
     rg.printRawMap();
@@ -132,8 +132,10 @@ void testNavigate()
     // rg.printB();
 
     //test initial top right border
-    test = {1, 0, 0, 2};
+    test = {1, 0, 3, 4};
     rg.navigate(test);
+
+    rg.calculateSimplePath(test);
 
     // std::cout << "\nMatrix A when initial node is top left corner is: \n";
     // rg.printA();
@@ -149,6 +151,9 @@ void testNavigate()
     rg.printB();
 
     rg.printX();
+
+    std::cout << "\nPath to follow is: \n";
+    rg.printSimplePath();
 } //end test navigate
 
 void testBuild()

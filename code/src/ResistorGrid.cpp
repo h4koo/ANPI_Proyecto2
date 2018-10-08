@@ -286,7 +286,7 @@ bool ResistorGrid::navigate(const indexPair &nodes)
                 {
 
                     //if we are at the bottom right corner
-                    if (nodePtr / cols == rows)
+                    if (nodePtr / cols == rows - 1)
                     {
                         //do nothing should never get here
                     }
@@ -301,7 +301,7 @@ bool ResistorGrid::navigate(const indexPair &nodes)
                     }
                 }
                 //if we are at the bottom border
-                else if (nodePtr / cols == rows)
+                else if (nodePtr / cols == rows - 1)
                 {
                     //all corners have been checked
                     //incoming up
@@ -390,7 +390,7 @@ bool ResistorGrid::navigate(const indexPair &nodes)
             {
 
                 //if we are at the bottom right corner
-                if (nodePtr / cols == rows)
+                if (nodePtr / cols == rows - 1)
                 {
                     //incoming up
                     A[i][nodesToIndex(nodei, nodej, nodei - 1, nodej)] = 1;
@@ -408,7 +408,7 @@ bool ResistorGrid::navigate(const indexPair &nodes)
                 }
             }
             //if we are at the bottom border
-            else if (nodePtr / cols == rows)
+            else if (nodePtr / cols == rows - 1)
             {
                 //all corners have been checked
                 //incoming up
@@ -604,9 +604,9 @@ void ResistorGrid::calculateSimplePath(const indexPair &nodes)
     int endNode = nodes.row2 * cols + nodes.col2;
     // int nodeEquationNum = cols * rows; // amount of node equations
     int nodei, nodej; //indexes for the node pointer
-    int nodePtr = startNode;
+    int pastPtr = -1, nodePtr = startNode;
     std::vector<int> vectPath;
-    int iUp, iDown, iRight, iLeft, iMax, iPass;
+    int iUp, iDown, iRight, iLeft, iMax;
     indexPair moveRes;
 
     while (nodePtr != endNode)
@@ -614,6 +614,8 @@ void ResistorGrid::calculateSimplePath(const indexPair &nodes)
 
         nodei = nodePtr / cols;
         nodej = nodePtr % cols;
+
+        //we check where in the matrix is the current node to see which currents to compare
 
         //if we are at the top border
         if (nodePtr % cols == nodePtr)
@@ -626,8 +628,15 @@ void ResistorGrid::calculateSimplePath(const indexPair &nodes)
 
                 //outgoing down
                 iDown = nodesToIndex(nodei, nodej, nodei + 1, nodej);
+
                 //calculate maximun current
-                iMax = calcCurrent(iUp, iDown, iRight, iLeft);
+                if (pastPtr == iRight)
+                    iMax = iDown;
+                else if (pastPtr == iDown)
+                    iMax = iRight;
+
+                else
+                    iMax = calcCurrent(iDown, iRight);
             }
             //we are at the top right corner
             else if (nodePtr == cols - 1)
@@ -636,8 +645,15 @@ void ResistorGrid::calculateSimplePath(const indexPair &nodes)
                 iLeft = nodesToIndex(nodei, nodej, nodei, nodej - 1);
                 //outgoing down
                 iDown = nodesToIndex(nodei, nodej, nodei + 1, nodej);
+
                 //calculate maximun current
-                iMax = calcCurrent(iDown, iLeft);
+                if (pastPtr == iLeft)
+                    iMax = iDown;
+                else if (pastPtr == iDown)
+                    iMax = iLeft;
+
+                else
+                    iMax = calcCurrent(iDown, iLeft);
             }
             else
             {
@@ -648,20 +664,34 @@ void ResistorGrid::calculateSimplePath(const indexPair &nodes)
                 //outgoing right
                 iRight = nodesToIndex(nodei, nodej, nodei, nodej + 1);
                 //calculate maximun current
-                iMax = calcCurrent(iDown, iRight, iLeft);
-            } //we don't check for node 0,0 since we are skipping it
+                if (pastPtr == iRight)
+                    iMax = calcCurrent(iDown, iLeft);
+                else if (pastPtr == iDown)
+                    iMax = calcCurrent(iRight, iLeft);
+                else if (pastPtr == iLeft)
+                    iMax = calcCurrent(iDown, iRight);
+                else
+
+                    iMax = calcCurrent(iDown, iRight, iLeft);
+            }
         }
         //if we are at the left border
         else if (nodePtr % cols == 0)
         {
-            //if we are at the botton left corner
-            if (nodePtr / cols == rows)
+            //if we are at the bottom left corner
+            if (nodePtr / cols == rows - 1)
             {
                 //incoming up
                 iUp = nodesToIndex(nodei, nodej, nodei - 1, nodej);
                 //outgoing right
                 iRight = nodesToIndex(nodei, nodej, nodei, nodej + 1);
-                iMax = calcCurrent(iUp, iRight);
+                //calculate maximun current
+                if (pastPtr == iUp)
+                    iMax = iRight;
+                else if (pastPtr == iRight)
+                    iMax = iUp;
+                else
+                    iMax = calcCurrent(iUp, iRight);
             }
             else
             {
@@ -670,11 +700,19 @@ void ResistorGrid::calculateSimplePath(const indexPair &nodes)
                 //outgoing right
                 iRight = nodesToIndex(nodei, nodej, nodei, nodej + 1);
 
-                //outfoing down
+                //outgoing down
                 iDown = nodesToIndex(nodei, nodej, nodei + 1, nodej);
-
                 //calculate maximun current
-                iMax = calcCurrent(iUp, iDown, iRight);
+                if (pastPtr == iRight)
+                    iMax = calcCurrent(iDown, iUp);
+                else if (pastPtr == iDown)
+                    iMax = calcCurrent(iRight, iUp);
+                else if (pastPtr == iUp)
+                    iMax = calcCurrent(iDown, iRight);
+
+                else
+                    //calculate maximun current
+                    iMax = calcCurrent(iUp, iDown, iRight);
             }
         }
         //if we are at the right border
@@ -682,13 +720,19 @@ void ResistorGrid::calculateSimplePath(const indexPair &nodes)
         {
 
             //if we are at the bottom right corner
-            if (nodePtr / cols == rows)
+            if (nodePtr / cols == rows - 1)
             {
                 //incoming up
                 iUp = nodesToIndex(nodei, nodej, nodei - 1, nodej);
                 //outgoing left
                 iLeft = nodesToIndex(nodei, nodej, nodei, nodej - 1);
-                iMax = calcCurrent(iUp, iLeft);
+                //calculate maximun current
+                if (pastPtr == iUp)
+                    iMax = iLeft;
+                else if (pastPtr == iLeft)
+                    iMax = iUp;
+                else
+                    iMax = calcCurrent(iUp, iLeft);
             }
             else
             {
@@ -698,11 +742,19 @@ void ResistorGrid::calculateSimplePath(const indexPair &nodes)
                 iDown = nodesToIndex(nodei, nodej, nodei + 1, nodej);
                 //incoming left
                 iLeft = nodesToIndex(nodei, nodej, nodei, nodej - 1);
-                iMax = calcCurrent(iUp, iDown, iLeft);
+                //calculate maximun current
+                if (pastPtr == iUp)
+                    iMax = calcCurrent(iDown, iLeft);
+                else if (pastPtr == iDown)
+                    iMax = calcCurrent(iUp, iLeft);
+                else if (pastPtr == iLeft)
+                    iMax = calcCurrent(iDown, iUp);
+                else
+                    iMax = calcCurrent(iUp, iDown, iLeft);
             }
         }
         //if we are at the bottom border
-        else if (nodePtr / cols == rows)
+        else if (nodePtr / cols == rows - 1)
         {
             //all corners have been checked
             //incoming up
@@ -711,7 +763,16 @@ void ResistorGrid::calculateSimplePath(const indexPair &nodes)
             iRight = nodesToIndex(nodei, nodej, nodei, nodej + 1);
             //incoming left
             iLeft = nodesToIndex(nodei, nodej, nodei, nodej - 1);
-            iMax = calcCurrent(iUp, iRight, iLeft);
+            //calculate maximun current
+            if (pastPtr == iRight)
+                iMax = calcCurrent(iUp, iLeft);
+            else if (pastPtr == iUp)
+                iMax = calcCurrent(iRight, iLeft);
+            else if (pastPtr == iLeft)
+                iMax = calcCurrent(iUp, iRight);
+
+            else
+                iMax = calcCurrent(iUp, iRight, iLeft);
         }
 
         //not on a border and not a corner
@@ -727,21 +788,48 @@ void ResistorGrid::calculateSimplePath(const indexPair &nodes)
             iRight = nodesToIndex(nodei, nodej, nodei, nodej + 1);
 
             //calculate maximun current
-            iMax = calcCurrent(iUp, iDown, iRight, iLeft);
+            if (pastPtr == iRight)
+                iMax = calcCurrent(iDown, iLeft, iUp);
+            else if (pastPtr == iDown)
+                iMax = calcCurrent(iRight, iLeft, iUp);
+            else if (pastPtr == iLeft)
+                iMax = calcCurrent(iDown, iRight, iUp);
+            else if (pastPtr == iUp)
+                iMax = calcCurrent(iDown, iRight, iLeft);
+            else
+                iMax = calcCurrent(iUp, iDown, iRight, iLeft);
         }
 
+        //set the past pointer to the current pointer
+        pastPtr = iMax;
         vectPath.push_back(nodePtr);
-
         moveRes = indexToNodes(iMax);
-        if (x[iMax] < 0)
+
+        if (iMax >= nodePtr)
         {
-            nodePtr = calcNode(moveRes.row1, moveRes.col1);
+            if (x[iMax] < 0)
+            {
+                nodePtr = calcNode(moveRes.row1, moveRes.col1);
+            }
+            else
+            {
+                nodePtr = calcNode(moveRes.row2, moveRes.col2);
+            }
         }
         else
         {
-            nodePtr = calcNode(moveRes.row2, moveRes.col2);
+            if (x[iMax] < 0)
+            {
+                nodePtr = calcNode(moveRes.row2, moveRes.col2);
+            }
+            else
+            {
+                nodePtr = calcNode(moveRes.row1, moveRes.col1);
+            }
         }
     } //end while
+
+    simplePath = vectPath;
 }
 
 int ResistorGrid::calcNode(int row, int col)
