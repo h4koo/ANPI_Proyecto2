@@ -9,10 +9,12 @@
  */
 
 #include <boost/test/unit_test.hpp>
-#include "MatrixUtils.hpp"
+
 #include "LUCrout.hpp"
 #include "LUDoolittle.hpp"
 #include "Solver.hpp"
+//#include "LU.hpp"
+#include "MatrixUtils.hpp"
 
 #include <iostream>
 #include <exception>
@@ -76,7 +78,24 @@ void luTest(const std::function<void(const Matrix<T> &,
     Matrix<T> L, U;
     unpack(LU, L, U);
     Matrix<T> Ar = L * U;
+
+    std::cout << "the matrix LU is:\n";
     anpi::printMatrix(LU);
+    std::cout << std::endl;
+    std::cout << std::endl;
+    std::cout << "the matrix L is:\n";
+    anpi::printMatrix(L);
+    std::cout << std::endl;
+    std::cout << std::endl;
+    std::cout << "the matrix U is:\n";
+    anpi::printMatrix(U);
+    std::cout << std::endl;
+    std::cout << std::endl;
+    std::cout << "the matrix Ar= L * U is:\n";
+    anpi::printMatrix(Ar);
+    std::cout << std::endl;
+    std::cout << std::endl;
+
     const T eps = std::numeric_limits<T>::epsilon();
 
     BOOST_CHECK(Ar.rows() == A.rows());
@@ -90,6 +109,77 @@ void luTest(const std::function<void(const Matrix<T> &,
       }
     }
   }
+  //other decomposition test
+  {
+    std::cout << "-------------------------------------------------------------:\n";
+    std::vector<size_t> p;
+    anpi::Matrix<T> LU, L, U, A = {{0, 2, 0, 1}, {2, 2, 3, 2}, {4, -3, 0, 1.}, {6, 1, -6, -5}}; //{{10, 24, -4, 15}, {30, 24, -34, 28}, {32, -23, 10, 18}, {6, 1, -6, -5}}; //
+    anpi::Matrix<T> AA = {{}};
+    anpi::luCrout(A, LU, p);
+    unpack(LU, L, U);
+    Matrix<T> Ar = L * U;
+
+    std::cout << "BEFORE PERMUTE: the matrix Ar= L * U is:\n";
+    anpi::printMatrix(Ar);
+    std::cout << std::endl;
+    std::cout << std::endl;
+
+    //permutation
+    anpi::permuteMatrix(Ar, p);
+
+    std::cout
+        << "the matrix A is:\n";
+    anpi::printMatrix(A);
+    std::cout << std::endl;
+    std::cout << std::endl;
+
+    std::cout << "El vector de permutacion es: \n";
+    for (size_t i = 0; i < p.size(); ++i)
+      std::cout << p[i] << "  ";
+    std::cout << std::endl;
+
+    std::cout << "AFTER PERMUTE: the matrix Ar= L * U is:\n";
+    anpi::printMatrix(Ar);
+    std::cout << std::endl;
+    std::cout << std::endl;
+
+    std::cout << " the matrix LU is:\n";
+    anpi::printMatrix(LU);
+    std::cout << std::endl;
+    std::cout << std::endl;
+    std::cout << "the matrix L is:\n";
+    anpi::printMatrix(L);
+    std::cout << std::endl;
+    std::cout << std::endl;
+    std::cout << "the matrix U is:\n";
+    anpi::printMatrix(U);
+    std::cout << std::endl;
+    std::cout << std::endl;
+  }
+
+} //end luTest
+
+template <typename T>
+void invertTest()
+{
+  anpi::Matrix<T> Ai, exAi, A = {{4, -2}, {10, -3}}; //{{1, 2, -3}, {4, -5, 6}, {7, -8, 9}};
+  // exAi = {{0.50000, 1.00000, -0.50000},
+  //         {1.00000, 5.00000, -3.00000},
+  //         {0.50000, 3.66667, -2.16667}};
+
+  //simple test
+  exAi = {{-0.375, 0.25}, {-1.25, 0.5}};
+
+  //anpi::invert(A, Ai);
+
+  std::cout << "the matrix A is:\n";
+  anpi::printMatrix(A);
+  std::cout << std::endl;
+  std::cout << "the matrix Ai is:\n";
+  anpi::printMatrix(Ai);
+  std::cout << std::endl;
+
+  BOOST_CHECK(Ai == exAi);
 }
 
 template <typename T>
@@ -156,10 +246,16 @@ BOOST_AUTO_TEST_CASE(Crout)
   anpi::test::luTest<float>(anpi::luCrout<float>, anpi::unpackCrout<float>);
   anpi::test::luTest<double>(anpi::luCrout<double>, anpi::unpackCrout<double>);
 }
+
+BOOST_AUTO_TEST_CASE(Inversion)
+{
+  anpi::test::invertTest<float>();
+  anpi::test::invertTest<double>();
+}
+
 BOOST_AUTO_TEST_CASE(SolveLU)
 {
   anpi::test::solverTest<float>();
   anpi::test::solverTest<double>();
 }
-
 BOOST_AUTO_TEST_SUITE_END()

@@ -12,14 +12,14 @@
 #define ANPI_SOLVER_HPP
 #include <iostream>
 #include "LUDoolittle.hpp"
-#include "LUCrout.hpp"
 
+#include "LUCrout.hpp"
 // #include "MatrixUtils.hpp"
 
 using namespace std;
 namespace anpi
 {
-// const double TINY = 1e-40;
+
 /** faster method used for LU decomposition
    */
 template <typename T>
@@ -28,6 +28,7 @@ inline void lu(const anpi::Matrix<T> &A,
                std::vector<size_t> &p)
 {
   anpi::luCrout(A, LU, p);
+  // anpi::luDoolittle(A, LU, p);
 }
 
 /** method used to create  the permutation matrix given a
@@ -57,11 +58,11 @@ void forwardSubstitution(const anpi::Matrix<T> &L,
 {
 
   int n = L.rows();
-  std::vector<T> x(n, 1);
-  // for (int i = 0; i < n; i++)
-  // {
-  //   x[i] = T(1);
-  // }
+  std::vector<T> x(n);
+  for (int i = 0; i < n; i++)
+  {
+    x[i] = T(1);
+  }
 
   T sum;
 
@@ -72,16 +73,7 @@ void forwardSubstitution(const anpi::Matrix<T> &L,
     {
       sum += L[m][i] * x[i];
     }
-    //to avoid 0 division
-    if (L[m][m] == 0)
-    {
-      x[m] = (b[m] - sum) / T(TINY);
-    }
-    // L[m][m] = 0.1e-22; //convert 0 to a very small number
-    else
-    {
-      x[m] = (b[m] - sum) / L[m][m];
-    }
+    x[m] = (b[m] - sum) / L[m][m];
   }
 
   y = x;
@@ -94,25 +86,17 @@ void backwardSubstitution(const anpi::Matrix<T> &U,
                           std::vector<T> &x)
 {
   int n = U.cols();
-  std::vector<T> w(n, 1);
-  // w.resize(n);
+  std::vector<T> w;
+  w.resize(n);
 
-  // for (int i = 0; i < n; i++)
-  // {
-  //   w[i] = T(1);
-  // }
+  for (int i = 0; i < n; i++)
+  {
+    w[i] = T(1);
+  }
 
   T sum;
 
-  if (U[n - 1][n - 1] == 0)
-  {
-    w[n - 1] = y[n - 1] / T(TINY);
-  }
-  // U[i][i] = TINY; //convert 0 to a very small number
-  else
-  {
-    w[n - 1] = y[n - 1] / U[n - 1][n - 1];
-  }
+  w[n - 1] = y[n - 1] / U[n - 1][n - 1];
 
   for (int i = (n - 2); i >= 0; i--)
   {
@@ -121,15 +105,7 @@ void backwardSubstitution(const anpi::Matrix<T> &U,
     {
       sum += U[i][j] * w[j];
     }
-    if (U[i][i] == 0)
-    {
-      w[i] = (y[i] - sum) / T(TINY);
-    }
-    // U[i][i] = TINY; //convert 0 to a very small number
-    else
-    {
-      w[i] = (y[i] - sum) / U[i][i];
-    }
+    w[i] = (y[i] - sum) / U[i][i];
   }
 
   x = w;
@@ -158,9 +134,9 @@ bool solveLU(const anpi::Matrix<T> &A,
              std::vector<T> &x,
              const std::vector<T> &b)
 {
-  // cout << "Datos de la matriz A" << endl;
-  // // datosMatrix(A);
-  // cout << "                    " << endl;
+  cout << "Datos de la matriz A" << endl;
+  datosMatrix(A);
+  cout << "                    " << endl;
   anpi::Matrix<T> LU;
   std::vector<size_t> p;
   anpi::lu(A, LU, p);
@@ -171,7 +147,6 @@ bool solveLU(const anpi::Matrix<T> &A,
 
   anpi::Matrix<T> P;
   anpi::permutationMatrix(p, P);
-
   // // anpi::Matrix<T>PB = P * b; //ERRROR
   cout << "Datos de la matriz A" << endl;
   datosMatrix(A);
@@ -185,7 +160,6 @@ bool solveLU(const anpi::Matrix<T> &A,
   cout << "Datos de la matriz P" << endl;
   datosMatrix(P);
   cout << "                    " << endl;
-
   std::vector<T> Pb(P.rows());
 
   // for (int i = 0; i < PB.rows(); i++)
@@ -194,7 +168,8 @@ bool solveLU(const anpi::Matrix<T> &A,
   // }
   // x=b;
   //we permute the b vector to match the permuted A matrix obtained from LU decomposition
-  for (size_t i = 0; i < P.rows(); ++i)
+  int n = P.rows();
+  for (int i = 0; i < n; ++i)
   {
     int ip = p[i]; //index in the permutation vector
     Pb[i] = b[ip]; //move the current value to the permuted position

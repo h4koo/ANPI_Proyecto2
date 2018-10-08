@@ -50,9 +50,15 @@ bool ResistorGrid::navigate(const indexPair &nodes)
     int nodeEquationNum = cols * rows;                     // amount of node equations
     int gridEquationNum = cols * rows - (cols + rows) + 1; //amount of grid equations
 
+    int nodei, nodej; //indexes for the node pointer
+
     int startNode = nodes.row1 * cols + nodes.col1;
     int endNode = nodes.row2 * cols + nodes.col2;
 
+    if (endNode >= nodeEquationNum || startNode >= nodeEquationNum)
+    {
+        throw anpi::Exception("Start or End node out of bounds, node does not exist\n");
+    }
     if (startNode == endNode)
     {
         //throw exception not possible to have same start and end node
@@ -103,6 +109,9 @@ bool ResistorGrid::navigate(const indexPair &nodes)
                 if (i == 1)
                     ++nodePtr;
 
+                nodei = nodePtr / cols;
+                nodej = nodePtr % cols;
+
                 //if we are at the top border
                 if (nodePtr % cols == nodePtr)
                 {
@@ -110,48 +119,48 @@ bool ResistorGrid::navigate(const indexPair &nodes)
                     if (nodePtr == 0)
                     {
                         //incoming right
-                        A[i][nodePtr] = 1;
-                        //outgoing down
-                        A[i][nodePtr + cols - 1] = -1;
-                    }
+                        A[i][nodesToIndex(nodei, nodej, nodei, nodej + 1)] = 1;
 
+                        //outgoing down
+                        A[i][nodesToIndex(nodei, nodej, nodei + 1, nodej)] = -1;
+                    }
                     //we are at the top right corner
                     else if (nodePtr == cols - 1)
                     {
                         //incoming left
-                        A[i][nodePtr - 1] = 1;
+                        A[i][nodesToIndex(nodei, nodej, nodei, nodej - 1)] = 1;
                         //outgoing down
-                        A[i][nodePtr + cols - 1] = -1;
+                        A[i][nodesToIndex(nodei, nodej, nodei + 1, nodej)] = -1;
                     }
                     else
                     {
                         //incoming left
-                        A[i][nodePtr - 1] = 1;
+                        A[i][nodesToIndex(nodei, nodej, nodei, nodej - 1)] = 1;
                         //outgoing down
-                        A[i][nodePtr + cols - 1] = -1;
+                        A[i][nodesToIndex(nodei, nodej, nodei + 1, nodej)] = -1;
                         //outgoing right
-                        A[i][nodePtr] = -1;
+                        A[i][nodesToIndex(nodei, nodej, nodei, nodej + 1)] = -1;
                     }
                 }
                 //if we are at the left border
                 else if (nodePtr % cols == 0)
                 {
                     //if we are at the bottom left corner
-                    if (nodePtr / cols == rows)
+                    if (nodePtr / cols == rows - 1)
                     {
                         //incoming up
-                        A[i][nodePtr - cols - 1] = 1;
+                        A[i][nodesToIndex(nodei, nodej, nodei - 1, nodej)] = 1;
                         //outgoing right
-                        A[i][nodePtr] = -1;
+                        A[i][nodesToIndex(nodei, nodej, nodei, nodej + 1)] = -1;
                     }
                     else
                     {
                         //incoming up
-                        A[i][nodePtr - cols - 1] = 1;
+                        A[i][nodesToIndex(nodei, nodej, nodei - 1, nodej)] = 1;
                         //outgoing right
-                        A[i][nodePtr] = -1;
+                        A[i][nodesToIndex(nodei, nodej, nodei, nodej + 1)] = -1;
                         //outfoing down
-                        A[i][nodePtr + cols - 1] = -1;
+                        A[i][nodesToIndex(nodei, nodej, nodei + 1, nodej)] = -1;
                     }
                 }
                 //if we are at the right border
@@ -162,42 +171,43 @@ bool ResistorGrid::navigate(const indexPair &nodes)
                     if (nodePtr / cols == rows)
                     {
                         //incoming up
-                        A[i][nodePtr - cols - 1] = 1;
+                        A[i][nodesToIndex(nodei, nodej, nodei - 1, nodej)] = 1;
                         //outgoing left
-                        A[i][nodePtr - 1] = -1;
+                        A[i][nodesToIndex(nodei, nodej, nodei, nodej - 1)] = -1;
                     }
                     else
                     {
                         //incoming up
-                        A[i][nodePtr - cols - 1] = 1;
+                        A[i][nodesToIndex(nodei, nodej, nodei - 1, nodej)] = 1;
                         //outgoing down
-                        A[i][nodePtr + cols - 1] = -1;
+                        A[i][nodesToIndex(nodei, nodej, nodei + 1, nodej)] = -1;
                         //incoming left
-                        A[i][nodePtr - 1] = 1;
+                        A[i][nodesToIndex(nodei, nodej, nodei, nodej - 1)] = 1;
                     }
                 }
+
                 //if we are at the bottom border
                 else if (nodePtr / cols == rows)
                 {
-                    //all borders have been checked
+                    //all corners have been checked
                     //incoming up
-                    A[i][nodePtr - cols - 1] = 1;
+                    A[i][nodesToIndex(nodei, nodej, nodei - 1, nodej)] = 1;
                     //outgoing right
-                    A[i][nodePtr] = -1;
+                    A[i][nodesToIndex(nodei, nodej, nodei, nodej + 1)] = -1;
                     //incoming left
-                    A[i][nodePtr - 1] = 1;
+                    A[i][nodesToIndex(nodei, nodej, nodei, nodej - 1)] = 1;
                 }
 
                 else
                 {
                     //incoming up
-                    A[i][nodePtr - cols - 1] = 1;
+                    A[i][nodesToIndex(nodei, nodej, nodei - 1, nodej)] = 1;
                     //incoming left
-                    A[i][nodePtr - 1] = 1;
+                    A[i][nodesToIndex(nodei, nodej, nodei, nodej - 1)] = 1;
                     //outgoing down
-                    A[i][nodePtr + cols - 1] = -1;
+                    A[i][nodesToIndex(nodei, nodej, nodei + 1, nodej)] = -1;
                     //outgoing right
-                    A[i][nodePtr] = -1;
+                    A[i][nodesToIndex(nodei, nodej, nodei, nodej + 1)] = -1;
                 }
                 //increment pointer to current node
                 ++nodePtr;
@@ -217,6 +227,8 @@ bool ResistorGrid::navigate(const indexPair &nodes)
             for (int i = 0; i < nodeEquationNum - 1; ++i)
             {
 
+                nodei = nodePtr / cols;
+                nodej = nodePtr % cols;
                 //if we are at the top border
                 if (nodePtr % cols == nodePtr)
                 {
@@ -224,96 +236,92 @@ bool ResistorGrid::navigate(const indexPair &nodes)
                     if (nodePtr == 0)
                     {
                         //incoming right
-                        A[i][nodePtr] = 1;
-                        //outgoing down
-                        A[i][nodePtr + cols - 1] = -1;
-                    }
+                        A[i][nodesToIndex(nodei, nodej, nodei, nodej + 1)] = 1;
 
+                        //outgoing down
+                        A[i][nodesToIndex(nodei, nodej, nodei + 1, nodej)] = -1;
+                    }
                     //we are at the top right corner
                     else if (nodePtr == cols - 1)
                     {
                         //incoming left
-                        A[i][nodePtr - 1] = 1;
+                        A[i][nodesToIndex(nodei, nodej, nodei, nodej - 1)] = 1;
                         //outgoing down
-                        A[i][nodePtr + cols - 1] = -1;
+                        A[i][nodesToIndex(nodei, nodej, nodei + 1, nodej)] = -1;
                     }
                     else
                     {
                         //incoming left
-                        A[i][nodePtr - 1] = 1;
+                        A[i][nodesToIndex(nodei, nodej, nodei, nodej - 1)] = 1;
                         //outgoing down
-                        A[i][nodePtr + cols - 1] = -1;
+                        A[i][nodesToIndex(nodei, nodej, nodei + 1, nodej)] = -1;
                         //outgoing right
-                        A[i][nodePtr] = -1;
+                        A[i][nodesToIndex(nodei, nodej, nodei, nodej + 1)] = -1;
                     }
                 }
+
                 //if we are at the left border
                 else if (nodePtr % cols == 0)
                 {
-                    //if we are at the botton left corner
-                    if (nodePtr / cols == rows)
+                    //if we are at the bottom left corner
+                    if (nodePtr / cols == rows - 1)
                     {
                         //incoming up
-                        A[i][nodePtr - cols - 1] = 1;
+                        A[i][nodesToIndex(nodei, nodej, nodei - 1, nodej)] = 1;
                         //outgoing right
-                        A[i][nodePtr] = -1;
+                        A[i][nodesToIndex(nodei, nodej, nodei, nodej + 1)] = -1;
                     }
                     else
                     {
                         //incoming up
-                        A[i][nodePtr - cols - 1] = 1;
+                        A[i][nodesToIndex(nodei, nodej, nodei - 1, nodej)] = 1;
                         //outgoing right
-                        A[i][nodePtr] = -1;
+                        A[i][nodesToIndex(nodei, nodej, nodei, nodej + 1)] = -1;
                         //outfoing down
-                        A[i][nodePtr + cols - 1] = -1;
+                        A[i][nodesToIndex(nodei, nodej, nodei + 1, nodej)] = -1;
                     }
                 }
                 //if we are at the right border
                 else if (nodePtr % cols == cols - 1)
                 {
 
-                    // //if we are at the botton right corner
-                    // if (nodePtr / cols == rows)
-                    // {
-                    //     //incoming up
-                    //     A[i][nodePtr - cols - 1] = 1;
-                    //     //outgoing left
-                    //     A[i][nodePtr - 1] = -1;
-                    // }
-                    // else
-
-                    //we don't check for node n,m since we are skipping it
+                    //if we are at the bottom right corner
+                    if (nodePtr / cols == rows)
+                    {
+                        //do nothing should never get here
+                    }
+                    else
                     {
                         //incoming up
-                        A[i][nodePtr - cols - 1] = 1;
+                        A[i][nodesToIndex(nodei, nodej, nodei - 1, nodej)] = 1;
                         //outgoing down
-                        A[i][nodePtr + cols - 1] = -1;
+                        A[i][nodesToIndex(nodei, nodej, nodei + 1, nodej)] = -1;
                         //incoming left
-                        A[i][nodePtr - 1] = 1;
+                        A[i][nodesToIndex(nodei, nodej, nodei, nodej - 1)] = 1;
                     }
                 }
                 //if we are at the bottom border
                 else if (nodePtr / cols == rows)
                 {
-                    //all borders have been checked
+                    //all corners have been checked
                     //incoming up
-                    A[i][nodePtr - cols - 1] = 1;
+                    A[i][nodesToIndex(nodei, nodej, nodei - 1, nodej)] = 1;
                     //outgoing right
-                    A[i][nodePtr] = -1;
+                    A[i][nodesToIndex(nodei, nodej, nodei, nodej + 1)] = -1;
                     //incoming left
-                    A[i][nodePtr - 1] = 1;
+                    A[i][nodesToIndex(nodei, nodej, nodei, nodej - 1)] = 1;
                 }
 
                 else
                 {
                     //incoming up
-                    A[i][nodePtr - cols - 1] = 1;
+                    A[i][nodesToIndex(nodei, nodej, nodei - 1, nodej)] = 1;
                     //incoming left
-                    A[i][nodePtr - 1] = 1;
+                    A[i][nodesToIndex(nodei, nodej, nodei, nodej - 1)] = 1;
                     //outgoing down
-                    A[i][nodePtr + cols - 1] = -1;
+                    A[i][nodesToIndex(nodei, nodej, nodei + 1, nodej)] = -1;
                     //outgoing right
-                    A[i][nodePtr] = -1;
+                    A[i][nodesToIndex(nodei, nodej, nodei, nodej + 1)] = -1;
                 }
                 //increment pointer to current node
                 ++nodePtr;
@@ -332,6 +340,9 @@ bool ResistorGrid::navigate(const indexPair &nodes)
         {
             // because we are skipping node 0,0 which is i=0
             nodePtr = i + 1;
+
+            nodei = nodePtr / cols;
+            nodej = nodePtr % cols;
             //if we are at the top border
             if (nodePtr % cols == nodePtr)
             {
@@ -339,39 +350,39 @@ bool ResistorGrid::navigate(const indexPair &nodes)
                 if (nodePtr == cols - 1)
                 {
                     //incoming left
-                    A[i][nodePtr - 1] = 1;
+                    A[i][nodesToIndex(nodei, nodej, nodei, nodej - 1)] = 1;
                     //outgoing down
-                    A[i][nodePtr + cols - 1] = -1;
+                    A[i][nodesToIndex(nodei, nodej, nodei + 1, nodej)] = -1;
                 }
                 else
                 {
                     //incoming left
-                    A[i][nodePtr - 1] = 1;
+                    A[i][nodesToIndex(nodei, nodej, nodei, nodej - 1)] = 1;
                     //outgoing down
-                    A[i][nodePtr + cols - 1] = -1;
+                    A[i][nodesToIndex(nodei, nodej, nodei + 1, nodej)] = -1;
                     //outgoing right
-                    A[i][nodePtr] = -1;
+                    A[i][nodesToIndex(nodei, nodej, nodei, nodej + 1)] = -1;
                 } //we don't check for node 0,0 since we are skipping it
             }
             //if we are at the left border
             else if (nodePtr % cols == 0)
             {
                 //if we are at the bottom left corner
-                if (nodePtr / cols == rows)
+                if (nodePtr / cols == rows - 1)
                 {
                     //incoming up
-                    A[i][nodePtr - cols - 1] = 1;
+                    A[i][nodesToIndex(nodei, nodej, nodei - 1, nodej)] = 1;
                     //outgoing right
-                    A[i][nodePtr] = -1;
+                    A[i][nodesToIndex(nodei, nodej, nodei, nodej + 1)] = -1;
                 }
                 else
                 {
                     //incoming up
-                    A[i][nodePtr - cols - 1] = 1;
+                    A[i][nodesToIndex(nodei, nodej, nodei - 1, nodej)] = 1;
                     //outgoing right
-                    A[i][nodePtr] = -1;
+                    A[i][nodesToIndex(nodei, nodej, nodei, nodej + 1)] = -1;
                     //outfoing down
-                    A[i][nodePtr + cols - 1] = -1;
+                    A[i][nodesToIndex(nodei, nodej, nodei + 1, nodej)] = -1;
                 }
             }
             //if we are at the right border
@@ -382,18 +393,18 @@ bool ResistorGrid::navigate(const indexPair &nodes)
                 if (nodePtr / cols == rows)
                 {
                     //incoming up
-                    A[i][nodePtr - cols] = 1;
+                    A[i][nodesToIndex(nodei, nodej, nodei - 1, nodej)] = 1;
                     //outgoing left
-                    A[i][nodePtr - 1] = -1;
+                    A[i][nodesToIndex(nodei, nodej, nodei, nodej - 1)] = -1;
                 }
                 else
                 {
                     //incoming up
-                    A[i][nodePtr - cols - 1] = 1;
+                    A[i][nodesToIndex(nodei, nodej, nodei - 1, nodej)] = 1;
                     //outgoing down
-                    A[i][nodePtr + cols - 1] = -1;
+                    A[i][nodesToIndex(nodei, nodej, nodei + 1, nodej)] = -1;
                     //incoming left
-                    A[i][nodePtr - 1] = 1;
+                    A[i][nodesToIndex(nodei, nodej, nodei, nodej - 1)] = 1;
                 }
             }
             //if we are at the bottom border
@@ -401,24 +412,24 @@ bool ResistorGrid::navigate(const indexPair &nodes)
             {
                 //all corners have been checked
                 //incoming up
-                A[i][nodePtr - cols - 1] = 1;
+                A[i][nodesToIndex(nodei, nodej, nodei - 1, nodej)] = 1;
                 //outgoing right
-                A[i][nodePtr] = -1;
+                A[i][nodesToIndex(nodei, nodej, nodei, nodej + 1)] = -1;
                 //incoming left
-                A[i][nodePtr - 1] = 1;
+                A[i][nodesToIndex(nodei, nodej, nodei, nodej - 1)] = 1;
             }
 
             //not on a border and not a corner
             else
             {
                 //incoming up
-                A[i][nodePtr - cols - 1] = 1;
+                A[i][nodesToIndex(nodei, nodej, nodei - 1, nodej)] = 1;
                 //incoming left
-                A[i][nodePtr - 1] = 1;
+                A[i][nodesToIndex(nodei, nodej, nodei, nodej - 1)] = 1;
                 //outgoing down
-                A[i][nodePtr + cols - 1] = -1;
+                A[i][nodesToIndex(nodei, nodej, nodei + 1, nodej)] = -1;
                 //outgoing right
-                A[i][nodePtr] = -1;
+                A[i][nodesToIndex(nodei, nodej, nodei, nodej + 1)] = -1;
             }
         } //end of for
     }     //end of eliminate node 0,0
@@ -459,7 +470,7 @@ bool ResistorGrid::navigate(const indexPair &nodes)
     anpi::solveLU(A, x, b);
 
     return true;
-}
+} // namespace anpi
 
 /**
 ∗ compute an index number representig the resistor located in the provided indices. 
@@ -588,7 +599,8 @@ void ResistorGrid::calculateSimplePath(const indexPair &nodes)
     int rows = rawMap.rows();
     int startNode = nodes.row1 * cols + nodes.col1;
     int endNode = nodes.row2 * cols + nodes.col2;
-    int nodeEquationNum = cols * rows; // amount of node equations
+    // int nodeEquationNum = cols * rows; // amount of node equations
+    int nodei, nodej; //indexes for the node pointer
     int nodePtr = startNode;
     std::vector<int> vectPath;
     int iUp, iDown, iRight, iLeft, iMax;
@@ -596,25 +608,38 @@ void ResistorGrid::calculateSimplePath(const indexPair &nodes)
 
     while (nodePtr != endNode)
     {
+
+        nodei = nodePtr / cols;
+        nodej = nodePtr % cols;
+
         //if we are at the top border
         if (nodePtr % cols == nodePtr)
         {
+            //if we are at the top left corner
+            if (nodePtr == 0)
+            {
+                //incoming right
+                iRight = nodesToIndex(nodei, nodej, nodei, nodej + 1);
+
+                //outgoing down
+                iDown = nodesToIndex(nodei, nodej, nodei + 1, nodej);
+            }
             //we are at the top right corner
-            if (nodePtr == cols - 1)
+            else if (nodePtr == cols - 1)
             {
                 //incoming left
-                iLeft = nodePtr - 1;
+                iLeft = nodesToIndex(nodei, nodej, nodei, nodej - 1);
                 //outgoing down
-                iDown = cols - 1;
+                iDown = nodesToIndex(nodei, nodej, nodei + 1, nodej);
             }
             else
             {
                 //incoming left
-                iLeft = nodePtr - 1;
+                iLeft = nodesToIndex(nodei, nodej, nodei, nodej - 1);
                 //outgoing down
-                iDown = nodePtr + cols;
+                iDown = nodesToIndex(nodei, nodej, nodei + 1, nodej);
                 //outgoing right
-                iRight = nodePtr;
+                iRight = nodesToIndex(nodei, nodej, nodei, nodej + 1);
             } //we don't check for node 0,0 since we are skipping it
         }
         //if we are at the left border
@@ -624,40 +649,41 @@ void ResistorGrid::calculateSimplePath(const indexPair &nodes)
             if (nodePtr / cols == rows)
             {
                 //incoming up
-                iUp = nodePtr - cols;
+                iUp = nodesToIndex(nodei, nodej, nodei - 1, nodej);
                 //outgoing right
-                iRight = nodePtr;
+                iRight = nodesToIndex(nodei, nodej, nodei, nodej + 1);
             }
             else
             {
                 //incoming up
-                iUp = nodePtr - cols;
+                iUp = nodesToIndex(nodei, nodej, nodei - 1, nodej);
                 //outgoing right
-                iRight = nodePtr;
+                iRight = nodesToIndex(nodei, nodej, nodei, nodej + 1);
+                ;
                 //outfoing down
-                iDown = nodePtr + cols;
+                iDown = nodesToIndex(nodei, nodej, nodei + 1, nodej);
             }
         }
         //if we are at the right border
         else if (nodePtr % cols == cols - 1)
         {
 
-            //if we are at the botton right corner
+            //if we are at the bottom right corner
             if (nodePtr / cols == rows)
             {
                 //incoming up
-                iUp = nodePtr - cols;
+                iUp = nodesToIndex(nodei, nodej, nodei - 1, nodej);
                 //outgoing left
-                iLeft = nodePtr - 1;
+                iLeft = nodesToIndex(nodei, nodej, nodei, nodej - 1);
             }
             else
             {
                 //incoming up
-                iUp = nodePtr - cols;
+                iUp = nodesToIndex(nodei, nodej, nodei - 1, nodej);
                 //outgoing down
-                iDown = nodePtr + cols - 1;
+                iDown = nodesToIndex(nodei, nodej, nodei + 1, nodej);
                 //incoming left
-                iLeft = nodePtr - 1;
+                iLeft = nodesToIndex(nodei, nodej, nodei, nodej - 1);
             }
         }
         //if we are at the bottom border
@@ -665,24 +691,26 @@ void ResistorGrid::calculateSimplePath(const indexPair &nodes)
         {
             //all corners have been checked
             //incoming up
-            iUp = nodePtr - cols;
+            iUp = nodesToIndex(nodei, nodej, nodei - 1, nodej);
             //outgoing right
-            iRight = nodePtr;
+            iRight = nodesToIndex(nodei, nodej, nodei, nodej + 1);
+            ;
             //incoming left
-            iLeft = nodePtr - 1;
+            iLeft = nodesToIndex(nodei, nodej, nodei, nodej - 1);
         }
 
         //not on a border and not a corner
         else
         {
             //incoming up
-            iUp = nodePtr - cols;
+            iUp = nodesToIndex(nodei, nodej, nodei - 1, nodej);
             //incoming left
-            iLeft = nodePtr - 1;
+            iLeft = nodesToIndex(nodei, nodej, nodei, nodej - 1);
             //outgoing down
-            iDown = nodePtr + cols;
+            iDown = nodesToIndex(nodei, nodej, nodei + 1, nodej);
             //outgoing right
-            iRight = nodePtr;
+            iRight = nodesToIndex(nodei, nodej, nodei, nodej + 1);
+            ;
         }
 
         vectPath.push_back(nodePtr);
@@ -703,6 +731,8 @@ int ResistorGrid::calcNode(int row, int col)
 {
     int cols = rawMap.cols();
     int rows = rawMap.rows();
+    if (row >= rows)
+        throw anpi::Exception("Resistor Grid: Calc Node: Node out of bounds");
     return row * cols + col;
 }
 
@@ -722,6 +752,7 @@ int ResistorGrid::calcCurrent(int up, int down, int right, int left)
     {
         iMax = left;
     }
+    return iMax;
 }
 
 } // namespace anpi
