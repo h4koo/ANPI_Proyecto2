@@ -603,7 +603,7 @@ void ResistorGrid::calculateSimplePath(const indexPair &nodes)
     int nodei, nodej; //indexes for the node pointer
     int nodePtr = startNode;
     std::vector<int> vectPath;
-    int iUp, iDown, iRight, iLeft, iMax;
+    int iUp, iDown, iRight, iLeft, iMax, iPass;
     indexPair moveRes;
 
     while (nodePtr != endNode)
