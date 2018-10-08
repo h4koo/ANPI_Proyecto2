@@ -61,6 +61,12 @@ class ResistorGrid
     ///  Vector  with the nodes to follow simple path
     std::vector<int> simplePath;
 
+    /// Matriz de dezplazamiento X
+    Matrix<float> xDespla;
+
+    /// Matriz de dezplazamiento Y
+    Matrix<float> yDespa;
+
   public:
     ///  . . .  constructors  and  other  methods
 
@@ -178,5 +184,6 @@ class ResistorGrid
     int calcCurrent(int Up, int Dowm, int Right, int Left);
     int calcCurrent(int down, int right, int left);
     int calcCurrent(int right, int left);
+    int calcDesplazamiento();
 };
 } // namespace anpi

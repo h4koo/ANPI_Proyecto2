@@ -214,7 +214,7 @@ bool ResistorGrid::navigate(const indexPair &nodes)
             } //end of for-------------------------------------------------------------------------------------------
         }     //end of eliminate 0,1
 
-        //we eliminate equation for node n,m
+        //we eliminate equation for nod123e n,m
         else
         {
             //since we are removing the last equation the indexes of the star andindex nodes remain the same
@@ -884,6 +884,114 @@ int ResistorGrid::calcCurrent(int right, int left)
         iMax = left;
     }
     return iMax;
+}
+
+/**
+ *Para calcular el dezplasamiento de los datos se debe calcular el desplzamiento en X y el Desplazamiento en Y \
+ *para esto se va revisando cada nodo y se guarda el dezplazamiento en en dos matrices una para x y una para Y. 
+ * 
+ */
+int ResistorGrid::calcDesplazamiento()
+{
+    int iUp, iDown, iLeft, iRight;                 //Guarda las corrientes en cada punto
+    int nodei, nodej;                              //indexes for the node pointer
+    int nodePtr = 0;                               //Nodo puntero el cual verifica el punto en el que estoy
+    int nodeFInal = rawMap.cols() * rawMap.rows(); //Nodo final en donde se encuentra el
+    int cols = rawMap.cols();                      //Columnas totales
+    int rows = rawMap.rows();                      //Filas totales
+    nodei = nodePtr / cols;
+    nodej = nodePtr % cols;
+    //Hay que buscar una forma para guardas los daros, para que no tengan que hacer todos los modulos
+    for (nodePtr; nodePtr <= nodeFInal; ++nodePtr)
+    {
+        nodei = nodePtr / cols;
+        nodej = nodePtr % cols;
+        //Para el caso de la primera fila
+        if (nodePtr <= cols)
+        {
+            if (nodePtr == 0)
+            {
+                //outgoing down
+                iDown = nodesToIndex(nodei, nodej, nodei + 1, nodej);
+                //outgoing right
+                iRight = nodesToIndex(nodei, nodej, nodei, nodej + 1);
+            }
+            else if (nodePtr < cols)
+            {
+                //incoming left
+                iLeft = nodesToIndex(nodei, nodej, nodei, nodej - 1);
+                //outgoing down
+                iDown = nodesToIndex(nodei, nodej, nodei + 1, nodej);
+                //outgoing right
+                iRight = nodesToIndex(nodei, nodej, nodei, nodej + 1);
+            }
+            else
+            {
+                //incoming left
+                iLeft = nodesToIndex(nodei, nodej, nodei, nodej - 1);
+                //outgoing down
+                iDown = nodesToIndex(nodei, nodej, nodei + 1, nodej);
+            }
+        }
+        else if (nodePtr % cols == 1)
+        {
+            if (nodePtr + cols > nodeFInal)
+            {
+                //incoming up
+                iUp = nodesToIndex(nodei, nodej, nodei - 1, nodej);
+                //outgoing right
+                iRight = nodesToIndex(nodei, nodej, nodei, nodej + 1);
+            }
+            else
+            {
+                //incoming up
+                iUp = nodesToIndex(nodei, nodej, nodei - 1, nodej);
+                //outgoing down
+                iDown = nodesToIndex(nodei, nodej, nodei + 1, nodej);
+                //outgoing right
+                iRight = nodesToIndex(nodei, nodej, nodei, nodej + 1);
+            }
+        }
+        else if (nodePtr % cols == 0)
+        {
+            if (nodePtr == nodeFInal)
+            {
+                //incoming up
+                iUp = nodesToIndex(nodei, nodej, nodei - 1, nodej);
+                //incoming left
+                iLeft = nodesToIndex(nodei, nodej, nodei, nodej - 1);
+            }
+            else
+            {
+                //incoming up
+                iUp = nodesToIndex(nodei, nodej, nodei - 1, nodej);
+                //incoming left
+                iLeft = nodesToIndex(nodei, nodej, nodei, nodej - 1);
+                //outgoing down
+                iDown = nodesToIndex(nodei, nodej, nodei + 1, nodej);
+            }
+        }
+        else if (nodePtr + cols > nodeFInal)
+        {
+            //outgoing down
+            iDown = nodesToIndex(nodei, nodej, nodei + 1, nodej);
+            //outgoing right
+            iRight = nodesToIndex(nodei, nodej, nodei, nodej + 1);
+            //incoming left
+            iLeft = nodesToIndex(nodei, nodej, nodei, nodej - 1);
+        }
+        else
+        {
+            //incoming up
+            iUp = nodesToIndex(nodei, nodej, nodei - 1, nodej);
+            //outgoing down
+            iDown = nodesToIndex(nodei, nodej, nodei + 1, nodej);
+            //outgoing right
+            iRight = nodesToIndex(nodei, nodej, nodei, nodej + 1);
+            //incoming left
+            iLeft = nodesToIndex(nodei, nodej, nodei, nodej - 1);
+        }
+    }
 }
 
 } // namespace anpi
