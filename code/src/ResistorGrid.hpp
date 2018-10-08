@@ -166,5 +166,7 @@ class ResistorGrid
     ∗ Calculate more current number.
     */
     int calcCurrent(int Up, int Dowm, int Right, int Left);
+    int calcCurrent(int down, int right, int left);
+    int calcCurrent(int right, int left);
 };
 } // namespace anpi

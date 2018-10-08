@@ -117,11 +117,10 @@ void testNavigate()
     // Matrix<float> a(3, 4, 1);
     // a[2][1] = 0;
 
-    indexPair test = {1, 0, 1, 3};
+    indexPair test = {1, 0, 0, 2};
     // set the Matrix in ResistorGrid class since method uses size of internal matrix
     // rg.setRawMap(a);
-
-    std::string mapPath = std::string(ANPI_DATA_PATH) + "/6x4map.png";
+    std::string mapPath = std::string(ANPI_DATA_PATH) + "/3x2blank.png";
     // ResistorGrid rg;
     rg.build(mapPath);
     rg.printRawMap();
