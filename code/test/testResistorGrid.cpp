@@ -123,8 +123,8 @@ void testDespla()
 
     test = {1, 0, 3, 4};
     rg.navigate(test);
-
     rg.calcDesplazamiento();
+    cout << "Termino por aqui" << endl;
 
     rg.printDesX();
     rg.printDesY();

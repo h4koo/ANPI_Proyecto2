@@ -900,27 +900,28 @@ void ResistorGrid::calcDesplazamiento()
     int cols = rawMap.cols();                      //Columnas totales
     xDespla = rawMap;
     yDespla = rawMap;
-    nodei = nodePtr / cols;
-    nodej = nodePtr % cols;
+    int i = 0;
+    int j = 0;
 
     //Hay que buscar una forma para guardas los daros, para que no tengan que hacer todos los modulos
-    for (; nodePtr <= nodeFInal; ++nodePtr)
+    for (; nodePtr < nodeFInal; ++nodePtr)
     {
         nodei = nodePtr / cols;
         nodej = nodePtr % cols;
         //Para el caso de la primera fila
-        if (nodePtr <= cols)
+        if (nodePtr <= cols - 1)
         {
             if (nodePtr == 0)
             {
+
                 //outgoing down
                 iDown = nodesToIndex(nodei, nodej, nodei + 1, nodej);
                 //outgoing right
                 iRight = nodesToIndex(nodei, nodej, nodei, nodej + 1);
-                xDespla[nodei][nodej] = iRight;
-                yDespla[nodei][nodej] = iDown;
+                xDespla[i][j] = iRight;
+                yDespla[i][j] = iDown;
             }
-            else if (nodePtr < cols)
+            else if (nodePtr < cols - 1)
             {
                 //incoming left
                 iLeft = nodesToIndex(nodei, nodej, nodei, nodej - 1);
@@ -941,52 +942,47 @@ void ResistorGrid::calcDesplazamiento()
                 yDespla[nodei][nodej] = iDown;
             }
         }
-        else if (nodePtr % cols == 1)
+        else if (j == 0)
         {
-            if (nodePtr + cols > nodeFInal)
+            if (nodePtr + cols == nodeFInal)
             {
                 //incoming up
                 iUp = nodesToIndex(nodei, nodej, nodei - 1, nodej);
                 //outgoing right
                 iRight = nodesToIndex(nodei, nodej, nodei, nodej + 1);
-                xDespla[nodei][nodej] = iRight;
-                yDespla[nodei][nodej] = iUp;
+                xDespla[i][j] = iRight;
+                yDespla[i][j] = iUp;
             }
             else
             {
-                //incoming up
-                iUp = nodesToIndex(nodei, nodej, nodei - 1, nodej);
-                //outgoing down
-                iDown = nodesToIndex(nodei, nodej, nodei + 1, nodej);
-                //outgoing right
-                iRight = nodesToIndex(nodei, nodej, nodei, nodej + 1);
-                xDespla[nodei][nodej] = iRight;
-                yDespla[nodei][nodej] = iDown + iUp;
+                xDespla[i][j] = iRight;
+                yDespla[i][j] = iDown + iUp;
             }
         }
-        else if (nodePtr % cols == 0)
+        else if (j == cols - 1)
         {
-            if (nodePtr == nodeFInal)
+            if (nodePtr == nodeFInal - 1)
             {
                 //incoming up
-                iUp = nodesToIndex(nodei, nodej, nodei - 1, nodej);
+                iUp = nodesToIndex(nodei, cols, nodei - 1, cols);
                 //incoming left
-                iLeft = nodesToIndex(nodei, nodej, nodei, nodej - 1);
-                xDespla[nodei][nodej] = iLeft;
-                yDespla[nodei][nodej] = iUp;
+                iLeft = nodesToIndex(nodei, cols, nodei, cols - 1);
+                xDespla[i][j] = iLeft;
+                yDespla[i][j] = iUp;
             }
             else
             {
                 //incoming up
-                iUp = nodesToIndex(nodei, nodej, nodei - 1, nodej);
+                iUp = nodesToIndex(nodei, cols, nodei - 1, cols);
                 //incoming left
-                iLeft = nodesToIndex(nodei, nodej, nodei, nodej - 1);
+                iLeft = nodesToIndex(nodei, cols, nodei, cols - 1);
                 //outgoing down
-                iDown = nodesToIndex(nodei, nodej, nodei + 1, nodej);
-                xDespla[nodei][nodej] = iLeft;
-                yDespla[nodei][nodej] = iUp + iDown;
+                iDown = nodesToIndex(nodei, cols, nodei + 1, cols);
+                xDespla[i][j] = iLeft;
+                yDespla[i][j] = iUp + iDown;
             }
         }
+
         else if (nodePtr + cols > nodeFInal)
         {
             //outgoing down
@@ -995,9 +991,10 @@ void ResistorGrid::calcDesplazamiento()
             iRight = nodesToIndex(nodei, nodej, nodei, nodej + 1);
             //incoming left
             iLeft = nodesToIndex(nodei, nodej, nodei, nodej - 1);
-            xDespla[nodei][nodej] = iLeft + iRight;
-            yDespla[nodei][nodej] = iUp;
+            xDespla[i][j] = iLeft + iRight;
+            yDespla[i][j] = iUp;
         }
+
         else
         {
             //incoming up
@@ -1008,8 +1005,17 @@ void ResistorGrid::calcDesplazamiento()
             iRight = nodesToIndex(nodei, nodej, nodei, nodej + 1);
             //incoming left
             iLeft = nodesToIndex(nodei, nodej, nodei, nodej - 1);
-            xDespla[nodei][nodej] = iLeft + iRight;
-            yDespla[nodei][nodej] = iDown + iUp;
+            xDespla[i][j] = iLeft + iRight;
+            yDespla[i][j] = iDown + iUp;
+        }
+        if (j == cols - 1 && nodePtr != 0)
+        {
+            ++i;
+            j = 0;
+        }
+        else
+        {
+            ++j;
         }
     }
 }
