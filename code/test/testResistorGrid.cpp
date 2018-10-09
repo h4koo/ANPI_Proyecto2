@@ -17,7 +17,7 @@
 #include <exception>
 #include <cstdlib>
 #include <complex>
-
+#include "../benchmarks/benchmarkFramework.hpp"
 #include <functional>
 
 #include <cmath>
@@ -124,7 +124,6 @@ void testDespla()
     test = {1, 0, 3, 4};
     rg.navigate(test);
     rg.calcDesplazamiento();
-    cout << "Termino por aqui" << endl;
 
     rg.printDesX();
     rg.printDesY();
@@ -176,6 +175,10 @@ void testNavigate()
 
     std::cout << "\nPath to follow is: \n";
     rg.printSimplePath();
+
+    /*vector<float> x = {1, 2, 3, 4, 5, 5, 5, 6};
+    vector<float> y = {1, 2, 3, 3, 3, 5, 7, 8};
+    ::anpi::benchmark::plotPath(x, y, "The rute of current is", "b");*/
 } //end test navigate
 
 void testBuild()
