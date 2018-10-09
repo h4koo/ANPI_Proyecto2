@@ -65,7 +65,7 @@ class ResistorGrid
     Matrix<float> xDespla;
 
     /// Matriz de dezplazamiento Y
-    Matrix<float> yDespa;
+    Matrix<float> yDespla;
 
   public:
     ///  . . .  constructors  and  other  methods
@@ -97,6 +97,19 @@ class ResistorGrid
         anpi::printMatrix(A);
         std::cout << std::endl;
     }
+
+    inline void printDesX()
+    {
+        anpi::printMatrix(xDespla);
+        std::cout << std::endl;
+    }
+
+    inline void printDesY()
+    {
+        anpi::printMatrix(yDespla);
+        std::cout << std::endl;
+    }
+
     inline void printRawMap()
     {
         anpi::printMatrix(rawMap);
@@ -121,6 +134,7 @@ class ResistorGrid
         }
         std::cout << std::endl;
     }
+
     inline void printSimplePath()
     {
         std::cout << " \n x vector is: \n";
@@ -184,6 +198,6 @@ class ResistorGrid
     int calcCurrent(int Up, int Dowm, int Right, int Left);
     int calcCurrent(int down, int right, int left);
     int calcCurrent(int right, int left);
-    int calcDesplazamiento();
+    void calcDesplazamiento();
 };
 } // namespace anpi

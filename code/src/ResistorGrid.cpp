@@ -891,18 +891,20 @@ int ResistorGrid::calcCurrent(int right, int left)
  *para esto se va revisando cada nodo y se guarda el dezplazamiento en en dos matrices una para x y una para Y. 
  * 
  */
-int ResistorGrid::calcDesplazamiento()
+void ResistorGrid::calcDesplazamiento()
 {
     int iUp, iDown, iLeft, iRight;                 //Guarda las corrientes en cada punto
     int nodei, nodej;                              //indexes for the node pointer
     int nodePtr = 0;                               //Nodo puntero el cual verifica el punto en el que estoy
     int nodeFInal = rawMap.cols() * rawMap.rows(); //Nodo final en donde se encuentra el
     int cols = rawMap.cols();                      //Columnas totales
-    int rows = rawMap.rows();                      //Filas totales
+    xDespla = rawMap;
+    yDespla = rawMap;
     nodei = nodePtr / cols;
     nodej = nodePtr % cols;
+
     //Hay que buscar una forma para guardas los daros, para que no tengan que hacer todos los modulos
-    for (nodePtr; nodePtr <= nodeFInal; ++nodePtr)
+    for (; nodePtr <= nodeFInal; ++nodePtr)
     {
         nodei = nodePtr / cols;
         nodej = nodePtr % cols;
@@ -915,6 +917,8 @@ int ResistorGrid::calcDesplazamiento()
                 iDown = nodesToIndex(nodei, nodej, nodei + 1, nodej);
                 //outgoing right
                 iRight = nodesToIndex(nodei, nodej, nodei, nodej + 1);
+                xDespla[nodei][nodej] = iRight;
+                yDespla[nodei][nodej] = iDown;
             }
             else if (nodePtr < cols)
             {
@@ -924,6 +928,8 @@ int ResistorGrid::calcDesplazamiento()
                 iDown = nodesToIndex(nodei, nodej, nodei + 1, nodej);
                 //outgoing right
                 iRight = nodesToIndex(nodei, nodej, nodei, nodej + 1);
+                xDespla[nodei][nodej] = iLeft + iRight;
+                yDespla[nodei][nodej] = iDown;
             }
             else
             {
@@ -931,6 +937,8 @@ int ResistorGrid::calcDesplazamiento()
                 iLeft = nodesToIndex(nodei, nodej, nodei, nodej - 1);
                 //outgoing down
                 iDown = nodesToIndex(nodei, nodej, nodei + 1, nodej);
+                xDespla[nodei][nodej] = iLeft;
+                yDespla[nodei][nodej] = iDown;
             }
         }
         else if (nodePtr % cols == 1)
@@ -941,6 +949,8 @@ int ResistorGrid::calcDesplazamiento()
                 iUp = nodesToIndex(nodei, nodej, nodei - 1, nodej);
                 //outgoing right
                 iRight = nodesToIndex(nodei, nodej, nodei, nodej + 1);
+                xDespla[nodei][nodej] = iRight;
+                yDespla[nodei][nodej] = iUp;
             }
             else
             {
@@ -950,6 +960,8 @@ int ResistorGrid::calcDesplazamiento()
                 iDown = nodesToIndex(nodei, nodej, nodei + 1, nodej);
                 //outgoing right
                 iRight = nodesToIndex(nodei, nodej, nodei, nodej + 1);
+                xDespla[nodei][nodej] = iRight;
+                yDespla[nodei][nodej] = iDown + iUp;
             }
         }
         else if (nodePtr % cols == 0)
@@ -960,6 +972,8 @@ int ResistorGrid::calcDesplazamiento()
                 iUp = nodesToIndex(nodei, nodej, nodei - 1, nodej);
                 //incoming left
                 iLeft = nodesToIndex(nodei, nodej, nodei, nodej - 1);
+                xDespla[nodei][nodej] = iLeft;
+                yDespla[nodei][nodej] = iUp;
             }
             else
             {
@@ -969,16 +983,20 @@ int ResistorGrid::calcDesplazamiento()
                 iLeft = nodesToIndex(nodei, nodej, nodei, nodej - 1);
                 //outgoing down
                 iDown = nodesToIndex(nodei, nodej, nodei + 1, nodej);
+                xDespla[nodei][nodej] = iLeft;
+                yDespla[nodei][nodej] = iUp + iDown;
             }
         }
         else if (nodePtr + cols > nodeFInal)
         {
             //outgoing down
-            iDown = nodesToIndex(nodei, nodej, nodei + 1, nodej);
+            iUp = nodesToIndex(nodei, nodej, nodei - 1, nodej);
             //outgoing right
             iRight = nodesToIndex(nodei, nodej, nodei, nodej + 1);
             //incoming left
             iLeft = nodesToIndex(nodei, nodej, nodei, nodej - 1);
+            xDespla[nodei][nodej] = iLeft + iRight;
+            yDespla[nodei][nodej] = iUp;
         }
         else
         {
@@ -990,6 +1008,8 @@ int ResistorGrid::calcDesplazamiento()
             iRight = nodesToIndex(nodei, nodej, nodei, nodej + 1);
             //incoming left
             iLeft = nodesToIndex(nodei, nodej, nodei, nodej - 1);
+            xDespla[nodei][nodej] = iLeft + iRight;
+            yDespla[nodei][nodej] = iDown + iUp;
         }
     }
 }

@@ -9,4 +9,4 @@
 
 #define ANPI_ENABLE_SIMD
 /* #undef ANPI_ENABLE_OpenMP */
-#define ANPI_DATA_PATH "/home/h4koo/Documents/ANPI/Proyecto2/ANPI_Proyecto2/code/data"
+#define ANPI_DATA_PATH "/home/acacia/git/ANPI_Proyecto2/code/data"

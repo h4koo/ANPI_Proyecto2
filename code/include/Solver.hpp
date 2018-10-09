@@ -148,7 +148,7 @@ bool solveLU(const anpi::Matrix<T> &A,
   anpi::Matrix<T> P;
   anpi::permutationMatrix(p, P);
   // // anpi::Matrix<T>PB = P * b; //ERRROR
-  cout << "Datos de la matriz A" << endl;
+  /*cout << "Datos de la matriz A" << endl;
   datosMatrix(A);
   cout << "                    " << endl;
   cout << "Datos de la matriz L" << endl;
@@ -160,6 +160,7 @@ bool solveLU(const anpi::Matrix<T> &A,
   cout << "Datos de la matriz P" << endl;
   datosMatrix(P);
   cout << "                    " << endl;
+  */
   std::vector<T> Pb(P.rows());
 
   // for (int i = 0; i < PB.rows(); i++)
