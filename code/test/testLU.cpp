@@ -183,6 +183,12 @@ void invertTest()
 }
 
 template <typename T>
+void prueba()
+{
+  std::cout << (9 / 8) << endl;
+}
+
+template <typename T>
 void solverTest()
 {
   anpi::Matrix<T> LU, A = {{0, 2, 0, 1}, {2, 2, 3, 2}, {4, -3, 0, 1.}, {6, 1, -6, -5}}, r = {{1, -5}, {2, -2}}, Z = {{10, 2, 0, 1}, {2, 5, 3, 3}, {4, -3, 0, 1.}, {6, 1, -4, -5}}; //r = {{1, -5}, {2, -2}};
@@ -257,5 +263,10 @@ BOOST_AUTO_TEST_CASE(SolveLU)
 {
   anpi::test::solverTest<float>();
   anpi::test::solverTest<double>();
+}
+
+BOOST_AUTO_TEST_CASE(pruebasMate)
+{
+  anpi::test::prueba<float>();
 }
 BOOST_AUTO_TEST_SUITE_END()

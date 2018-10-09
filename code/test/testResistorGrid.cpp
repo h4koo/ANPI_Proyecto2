@@ -108,6 +108,28 @@ void indexTest()
     BOOST_CHECK(calculatedResistor == testResistor);
 } //END OF indexTest()
 
+void testDespla()
+{
+    ResistorGrid rg;
+    indexPair test = {1, 0, 0, 2};
+    // set the Matrix in ResistorGrid class since method uses size of internal matrix
+    // rg.setRawMap(a);
+    std::string mapPath = std::string(ANPI_DATA_PATH) + "/5x4map.png";
+    // ResistorGrid rg;
+    rg.build(mapPath);
+    rg.printRawMap();
+
+    std::cout << "\nMatrix A is: \n";
+
+    test = {1, 0, 3, 4};
+    rg.navigate(test);
+
+    rg.calcDesplazamiento();
+
+    rg.printDesX();
+    rg.printDesY();
+}
+
 void testNavigate()
 {
 
@@ -182,6 +204,11 @@ BOOST_AUTO_TEST_CASE(IndexConversion)
 BOOST_AUTO_TEST_CASE(Navigate)
 {
     anpi::test::testNavigate();
+}
+
+BOOST_AUTO_TEST_CASE(Desplazamiento)
+{
+    anpi::test::testDespla();
 }
 BOOST_AUTO_TEST_CASE(MapLoading)
 {
