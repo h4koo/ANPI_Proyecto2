@@ -117,7 +117,7 @@ class ResistorGrid
     }
     inline void printSimplePath()
     {
-        std::cout << " \n x vector is: \n";
+        std::cout << " \n Simple Path is: \n";
         for (size_t i = 0; i < simplePath.size(); ++i)
         {
             std::cout << simplePath[i] << "  ";
@@ -178,5 +178,8 @@ class ResistorGrid
     int calcCurrent(int Up, int Dowm, int Right, int Left);
     int calcCurrent(int down, int right, int left);
     int calcCurrent(int right, int left);
+
+    int maxCurrent(std::vector<int> &currents);
 };
+
 } // namespace anpi

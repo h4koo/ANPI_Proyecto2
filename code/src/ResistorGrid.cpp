@@ -118,28 +118,28 @@ bool ResistorGrid::navigate(const indexPair &nodes)
                     //if we are at the top left corner
                     if (nodePtr == 0)
                     {
-                        //incoming right
+                        //outgoin right
                         A[i][nodesToIndex(nodei, nodej, nodei, nodej + 1)] = 1;
 
                         //outgoing down
-                        A[i][nodesToIndex(nodei, nodej, nodei + 1, nodej)] = -1;
+                        A[i][nodesToIndex(nodei, nodej, nodei + 1, nodej)] = 1;
                     }
                     //we are at the top right corner
                     else if (nodePtr == cols - 1)
                     {
                         //incoming left
-                        A[i][nodesToIndex(nodei, nodej, nodei, nodej - 1)] = 1;
+                        A[i][nodesToIndex(nodei, nodej, nodei, nodej - 1)] = -1;
                         //outgoing down
-                        A[i][nodesToIndex(nodei, nodej, nodei + 1, nodej)] = -1;
+                        A[i][nodesToIndex(nodei, nodej, nodei + 1, nodej)] = 1;
                     }
                     else
                     {
                         //incoming left
-                        A[i][nodesToIndex(nodei, nodej, nodei, nodej - 1)] = 1;
+                        A[i][nodesToIndex(nodei, nodej, nodei, nodej - 1)] = -1;
                         //outgoing down
-                        A[i][nodesToIndex(nodei, nodej, nodei + 1, nodej)] = -1;
+                        A[i][nodesToIndex(nodei, nodej, nodei + 1, nodej)] = 1;
                         //outgoing right
-                        A[i][nodesToIndex(nodei, nodej, nodei, nodej + 1)] = -1;
+                        A[i][nodesToIndex(nodei, nodej, nodei, nodej + 1)] = 1;
                     }
                 }
                 //if we are at the left border
@@ -149,18 +149,18 @@ bool ResistorGrid::navigate(const indexPair &nodes)
                     if (nodePtr / cols == rows - 1)
                     {
                         //incoming up
-                        A[i][nodesToIndex(nodei, nodej, nodei - 1, nodej)] = 1;
+                        A[i][nodesToIndex(nodei, nodej, nodei - 1, nodej)] = -1;
                         //outgoing right
-                        A[i][nodesToIndex(nodei, nodej, nodei, nodej + 1)] = -1;
+                        A[i][nodesToIndex(nodei, nodej, nodei, nodej + 1)] = 1;
                     }
                     else
                     {
                         //incoming up
-                        A[i][nodesToIndex(nodei, nodej, nodei - 1, nodej)] = 1;
+                        A[i][nodesToIndex(nodei, nodej, nodei - 1, nodej)] = -1;
                         //outgoing right
-                        A[i][nodesToIndex(nodei, nodej, nodei, nodej + 1)] = -1;
+                        A[i][nodesToIndex(nodei, nodej, nodei, nodej + 1)] = 1;
                         //outfoing down
-                        A[i][nodesToIndex(nodei, nodej, nodei + 1, nodej)] = -1;
+                        A[i][nodesToIndex(nodei, nodej, nodei + 1, nodej)] = 1;
                     }
                 }
                 //if we are at the right border
@@ -171,18 +171,18 @@ bool ResistorGrid::navigate(const indexPair &nodes)
                     if (nodePtr / cols == rows)
                     {
                         //incoming up
-                        A[i][nodesToIndex(nodei, nodej, nodei - 1, nodej)] = 1;
-                        //outgoing left
+                        A[i][nodesToIndex(nodei, nodej, nodei - 1, nodej)] = -1;
+                        //incoming left
                         A[i][nodesToIndex(nodei, nodej, nodei, nodej - 1)] = -1;
                     }
                     else
                     {
                         //incoming up
-                        A[i][nodesToIndex(nodei, nodej, nodei - 1, nodej)] = 1;
+                        A[i][nodesToIndex(nodei, nodej, nodei - 1, nodej)] = -1;
                         //outgoing down
-                        A[i][nodesToIndex(nodei, nodej, nodei + 1, nodej)] = -1;
+                        A[i][nodesToIndex(nodei, nodej, nodei + 1, nodej)] = 1;
                         //incoming left
-                        A[i][nodesToIndex(nodei, nodej, nodei, nodej - 1)] = 1;
+                        A[i][nodesToIndex(nodei, nodej, nodei, nodej - 1)] = -1;
                     }
                 }
 
@@ -191,23 +191,23 @@ bool ResistorGrid::navigate(const indexPair &nodes)
                 {
                     //all corners have been checked
                     //incoming up
-                    A[i][nodesToIndex(nodei, nodej, nodei - 1, nodej)] = 1;
+                    A[i][nodesToIndex(nodei, nodej, nodei - 1, nodej)] = -1;
                     //outgoing right
-                    A[i][nodesToIndex(nodei, nodej, nodei, nodej + 1)] = -1;
+                    A[i][nodesToIndex(nodei, nodej, nodei, nodej + 1)] = 1;
                     //incoming left
-                    A[i][nodesToIndex(nodei, nodej, nodei, nodej - 1)] = 1;
+                    A[i][nodesToIndex(nodei, nodej, nodei, nodej - 1)] = -1;
                 }
 
                 else
                 {
                     //incoming up
-                    A[i][nodesToIndex(nodei, nodej, nodei - 1, nodej)] = 1;
+                    A[i][nodesToIndex(nodei, nodej, nodei - 1, nodej)] = -1;
                     //incoming left
-                    A[i][nodesToIndex(nodei, nodej, nodei, nodej - 1)] = 1;
+                    A[i][nodesToIndex(nodei, nodej, nodei, nodej - 1)] = -1;
                     //outgoing down
-                    A[i][nodesToIndex(nodei, nodej, nodei + 1, nodej)] = -1;
+                    A[i][nodesToIndex(nodei, nodej, nodei + 1, nodej)] = 1;
                     //outgoing right
-                    A[i][nodesToIndex(nodei, nodej, nodei, nodej + 1)] = -1;
+                    A[i][nodesToIndex(nodei, nodej, nodei, nodej + 1)] = 1;
                 }
                 //increment pointer to current node
                 ++nodePtr;
@@ -235,28 +235,28 @@ bool ResistorGrid::navigate(const indexPair &nodes)
                     //if we are at the top left corner
                     if (nodePtr == 0)
                     {
-                        //incoming right
+                        //outgoing right
                         A[i][nodesToIndex(nodei, nodej, nodei, nodej + 1)] = 1;
 
                         //outgoing down
-                        A[i][nodesToIndex(nodei, nodej, nodei + 1, nodej)] = -1;
+                        A[i][nodesToIndex(nodei, nodej, nodei + 1, nodej)] = 1;
                     }
                     //we are at the top right corner
                     else if (nodePtr == cols - 1)
                     {
                         //incoming left
-                        A[i][nodesToIndex(nodei, nodej, nodei, nodej - 1)] = 1;
+                        A[i][nodesToIndex(nodei, nodej, nodei, nodej - 1)] = -1;
                         //outgoing down
-                        A[i][nodesToIndex(nodei, nodej, nodei + 1, nodej)] = -1;
+                        A[i][nodesToIndex(nodei, nodej, nodei + 1, nodej)] = 1;
                     }
                     else
                     {
                         //incoming left
-                        A[i][nodesToIndex(nodei, nodej, nodei, nodej - 1)] = 1;
+                        A[i][nodesToIndex(nodei, nodej, nodei, nodej - 1)] = -1;
                         //outgoing down
-                        A[i][nodesToIndex(nodei, nodej, nodei + 1, nodej)] = -1;
+                        A[i][nodesToIndex(nodei, nodej, nodei + 1, nodej)] = 1;
                         //outgoing right
-                        A[i][nodesToIndex(nodei, nodej, nodei, nodej + 1)] = -1;
+                        A[i][nodesToIndex(nodei, nodej, nodei, nodej + 1)] = 1;
                     }
                 }
 
@@ -267,18 +267,18 @@ bool ResistorGrid::navigate(const indexPair &nodes)
                     if (nodePtr / cols == rows - 1)
                     {
                         //incoming up
-                        A[i][nodesToIndex(nodei, nodej, nodei - 1, nodej)] = 1;
+                        A[i][nodesToIndex(nodei, nodej, nodei - 1, nodej)] = -1;
                         //outgoing right
-                        A[i][nodesToIndex(nodei, nodej, nodei, nodej + 1)] = -1;
+                        A[i][nodesToIndex(nodei, nodej, nodei, nodej + 1)] = 1;
                     }
                     else
                     {
                         //incoming up
-                        A[i][nodesToIndex(nodei, nodej, nodei - 1, nodej)] = 1;
+                        A[i][nodesToIndex(nodei, nodej, nodei - 1, nodej)] = -1;
                         //outgoing right
-                        A[i][nodesToIndex(nodei, nodej, nodei, nodej + 1)] = -1;
+                        A[i][nodesToIndex(nodei, nodej, nodei, nodej + 1)] = 1;
                         //outfoing down
-                        A[i][nodesToIndex(nodei, nodej, nodei + 1, nodej)] = -1;
+                        A[i][nodesToIndex(nodei, nodej, nodei + 1, nodej)] = 1;
                     }
                 }
                 //if we are at the right border
@@ -293,11 +293,11 @@ bool ResistorGrid::navigate(const indexPair &nodes)
                     else
                     {
                         //incoming up
-                        A[i][nodesToIndex(nodei, nodej, nodei - 1, nodej)] = 1;
+                        A[i][nodesToIndex(nodei, nodej, nodei - 1, nodej)] = -1;
                         //outgoing down
-                        A[i][nodesToIndex(nodei, nodej, nodei + 1, nodej)] = -1;
+                        A[i][nodesToIndex(nodei, nodej, nodei + 1, nodej)] = 1;
                         //incoming left
-                        A[i][nodesToIndex(nodei, nodej, nodei, nodej - 1)] = 1;
+                        A[i][nodesToIndex(nodei, nodej, nodei, nodej - 1)] = -1;
                     }
                 }
                 //if we are at the bottom border
@@ -305,23 +305,23 @@ bool ResistorGrid::navigate(const indexPair &nodes)
                 {
                     //all corners have been checked
                     //incoming up
-                    A[i][nodesToIndex(nodei, nodej, nodei - 1, nodej)] = 1;
+                    A[i][nodesToIndex(nodei, nodej, nodei - 1, nodej)] = -1;
                     //outgoing right
-                    A[i][nodesToIndex(nodei, nodej, nodei, nodej + 1)] = -1;
+                    A[i][nodesToIndex(nodei, nodej, nodei, nodej + 1)] = 1;
                     //incoming left
-                    A[i][nodesToIndex(nodei, nodej, nodei, nodej - 1)] = 1;
+                    A[i][nodesToIndex(nodei, nodej, nodei, nodej - 1)] = -1;
                 }
 
                 else
                 {
                     //incoming up
-                    A[i][nodesToIndex(nodei, nodej, nodei - 1, nodej)] = 1;
+                    A[i][nodesToIndex(nodei, nodej, nodei - 1, nodej)] = -1;
                     //incoming left
-                    A[i][nodesToIndex(nodei, nodej, nodei, nodej - 1)] = 1;
+                    A[i][nodesToIndex(nodei, nodej, nodei, nodej - 1)] = -1;
                     //outgoing down
-                    A[i][nodesToIndex(nodei, nodej, nodei + 1, nodej)] = -1;
+                    A[i][nodesToIndex(nodei, nodej, nodei + 1, nodej)] = 1;
                     //outgoing right
-                    A[i][nodesToIndex(nodei, nodej, nodei, nodej + 1)] = -1;
+                    A[i][nodesToIndex(nodei, nodej, nodei, nodej + 1)] = 1;
                 }
                 //increment pointer to current node
                 ++nodePtr;
@@ -350,18 +350,18 @@ bool ResistorGrid::navigate(const indexPair &nodes)
                 if (nodePtr == cols - 1)
                 {
                     //incoming left
-                    A[i][nodesToIndex(nodei, nodej, nodei, nodej - 1)] = 1;
+                    A[i][nodesToIndex(nodei, nodej, nodei, nodej - 1)] = -1;
                     //outgoing down
-                    A[i][nodesToIndex(nodei, nodej, nodei + 1, nodej)] = -1;
+                    A[i][nodesToIndex(nodei, nodej, nodei + 1, nodej)] = 1;
                 }
                 else
                 {
                     //incoming left
-                    A[i][nodesToIndex(nodei, nodej, nodei, nodej - 1)] = 1;
+                    A[i][nodesToIndex(nodei, nodej, nodei, nodej - 1)] = -1;
                     //outgoing down
-                    A[i][nodesToIndex(nodei, nodej, nodei + 1, nodej)] = -1;
+                    A[i][nodesToIndex(nodei, nodej, nodei + 1, nodej)] = 1;
                     //outgoing right
-                    A[i][nodesToIndex(nodei, nodej, nodei, nodej + 1)] = -1;
+                    A[i][nodesToIndex(nodei, nodej, nodei, nodej + 1)] = 1;
                 } //we don't check for node 0,0 since we are skipping it
             }
             //if we are at the left border
@@ -371,18 +371,18 @@ bool ResistorGrid::navigate(const indexPair &nodes)
                 if (nodePtr / cols == rows - 1)
                 {
                     //incoming up
-                    A[i][nodesToIndex(nodei, nodej, nodei - 1, nodej)] = 1;
+                    A[i][nodesToIndex(nodei, nodej, nodei - 1, nodej)] = -1;
                     //outgoing right
-                    A[i][nodesToIndex(nodei, nodej, nodei, nodej + 1)] = -1;
+                    A[i][nodesToIndex(nodei, nodej, nodei, nodej + 1)] = 1;
                 }
                 else
                 {
                     //incoming up
-                    A[i][nodesToIndex(nodei, nodej, nodei - 1, nodej)] = 1;
+                    A[i][nodesToIndex(nodei, nodej, nodei - 1, nodej)] = -1;
                     //outgoing right
-                    A[i][nodesToIndex(nodei, nodej, nodei, nodej + 1)] = -1;
+                    A[i][nodesToIndex(nodei, nodej, nodei, nodej + 1)] = 1;
                     //outfoing down
-                    A[i][nodesToIndex(nodei, nodej, nodei + 1, nodej)] = -1;
+                    A[i][nodesToIndex(nodei, nodej, nodei + 1, nodej)] = 1;
                 }
             }
             //if we are at the right border
@@ -393,18 +393,18 @@ bool ResistorGrid::navigate(const indexPair &nodes)
                 if (nodePtr / cols == rows - 1)
                 {
                     //incoming up
-                    A[i][nodesToIndex(nodei, nodej, nodei - 1, nodej)] = 1;
+                    A[i][nodesToIndex(nodei, nodej, nodei - 1, nodej)] = -1;
                     //outgoing left
                     A[i][nodesToIndex(nodei, nodej, nodei, nodej - 1)] = -1;
                 }
                 else
                 {
                     //incoming up
-                    A[i][nodesToIndex(nodei, nodej, nodei - 1, nodej)] = 1;
+                    A[i][nodesToIndex(nodei, nodej, nodei - 1, nodej)] = -1;
                     //outgoing down
-                    A[i][nodesToIndex(nodei, nodej, nodei + 1, nodej)] = -1;
+                    A[i][nodesToIndex(nodei, nodej, nodei + 1, nodej)] = 1;
                     //incoming left
-                    A[i][nodesToIndex(nodei, nodej, nodei, nodej - 1)] = 1;
+                    A[i][nodesToIndex(nodei, nodej, nodei, nodej - 1)] = -1;
                 }
             }
             //if we are at the bottom border
@@ -412,24 +412,24 @@ bool ResistorGrid::navigate(const indexPair &nodes)
             {
                 //all corners have been checked
                 //incoming up
-                A[i][nodesToIndex(nodei, nodej, nodei - 1, nodej)] = 1;
+                A[i][nodesToIndex(nodei, nodej, nodei - 1, nodej)] = -1;
                 //outgoing right
-                A[i][nodesToIndex(nodei, nodej, nodei, nodej + 1)] = -1;
+                A[i][nodesToIndex(nodei, nodej, nodei, nodej + 1)] = 1;
                 //incoming left
-                A[i][nodesToIndex(nodei, nodej, nodei, nodej - 1)] = 1;
+                A[i][nodesToIndex(nodei, nodej, nodei, nodej - 1)] = -1;
             }
 
             //not on a border and not a corner
             else
             {
                 //incoming up
-                A[i][nodesToIndex(nodei, nodej, nodei - 1, nodej)] = 1;
+                A[i][nodesToIndex(nodei, nodej, nodei - 1, nodej)] = -1;
                 //incoming left
-                A[i][nodesToIndex(nodei, nodej, nodei, nodej - 1)] = 1;
+                A[i][nodesToIndex(nodei, nodej, nodei, nodej - 1)] = -1;
                 //outgoing down
-                A[i][nodesToIndex(nodei, nodej, nodei + 1, nodej)] = -1;
+                A[i][nodesToIndex(nodei, nodej, nodei + 1, nodej)] = 1;
                 //outgoing right
-                A[i][nodesToIndex(nodei, nodej, nodei, nodej + 1)] = -1;
+                A[i][nodesToIndex(nodei, nodej, nodei, nodej + 1)] = 1;
             }
         } //end of for
     }     //end of eliminate node 0,0
@@ -605,7 +605,7 @@ void ResistorGrid::calculateSimplePath(const indexPair &nodes)
     // int nodeEquationNum = cols * rows; // amount of node equations
     int nodei, nodej; //indexes for the node pointer
     int pastPtr = -1, nodePtr = startNode;
-    std::vector<int> vectPath;
+    std::vector<int> vectPath, outCurrents;
     int iUp, iDown, iRight, iLeft, iMax;
     indexPair moveRes;
 
@@ -615,6 +615,7 @@ void ResistorGrid::calculateSimplePath(const indexPair &nodes)
         nodei = nodePtr / cols;
         nodej = nodePtr % cols;
 
+        outCurrents.clear();
         //we check where in the matrix is the current node to see which currents to compare
 
         //if we are at the top border
@@ -629,6 +630,15 @@ void ResistorGrid::calculateSimplePath(const indexPair &nodes)
                 //outgoing down
                 iDown = nodesToIndex(nodei, nodej, nodei + 1, nodej);
 
+                if (x[iRight] < 0)
+                {
+                    outCurrents.push_back(iRight);
+                }
+                if (x[iDown] > 0)
+                {
+                    outCurrents.push_back(iDown);
+                }
+
                 //calculate maximun current
                 if (pastPtr == iRight)
                     iMax = iDown;
@@ -636,7 +646,8 @@ void ResistorGrid::calculateSimplePath(const indexPair &nodes)
                     iMax = iRight;
 
                 else
-                    iMax = calcCurrent(iDown, iRight);
+                    // iMax = calcCurrent(iDown, iRight);
+                    iMax = maxCurrent(outCurrents);
             }
             //we are at the top right corner
             else if (nodePtr == cols - 1)
@@ -646,6 +657,15 @@ void ResistorGrid::calculateSimplePath(const indexPair &nodes)
                 //outgoing down
                 iDown = nodesToIndex(nodei, nodej, nodei + 1, nodej);
 
+                if (x[iLeft] < 0)
+                {
+                    outCurrents.push_back(iLeft);
+                }
+                if (x[iDown] > 0)
+                {
+                    outCurrents.push_back(iDown);
+                }
+
                 //calculate maximun current
                 if (pastPtr == iLeft)
                     iMax = iDown;
@@ -653,7 +673,8 @@ void ResistorGrid::calculateSimplePath(const indexPair &nodes)
                     iMax = iLeft;
 
                 else
-                    iMax = calcCurrent(iDown, iLeft);
+                    // iMax = calcCurrent(iDown, iLeft);
+                    iMax = maxCurrent(outCurrents);
             }
             else
             {
@@ -663,6 +684,20 @@ void ResistorGrid::calculateSimplePath(const indexPair &nodes)
                 iDown = nodesToIndex(nodei, nodej, nodei + 1, nodej);
                 //outgoing right
                 iRight = nodesToIndex(nodei, nodej, nodei, nodej + 1);
+
+                if (x[iLeft] < 0)
+                {
+                    outCurrents.push_back(iLeft);
+                }
+                if (x[iDown] > 0)
+                {
+                    outCurrents.push_back(iDown);
+                }
+                if (x[iRight] > 0)
+                {
+                    outCurrents.push_back(iRight);
+                }
+
                 //calculate maximun current
                 if (pastPtr == iRight)
                     iMax = calcCurrent(iDown, iLeft);
@@ -672,7 +707,8 @@ void ResistorGrid::calculateSimplePath(const indexPair &nodes)
                     iMax = calcCurrent(iDown, iRight);
                 else
 
-                    iMax = calcCurrent(iDown, iRight, iLeft);
+                    // iMax = calcCurrent(iDown, iRight, iLeft);
+                    iMax = maxCurrent(outCurrents);
             }
         }
         //if we are at the left border
@@ -685,13 +721,24 @@ void ResistorGrid::calculateSimplePath(const indexPair &nodes)
                 iUp = nodesToIndex(nodei, nodej, nodei - 1, nodej);
                 //outgoing right
                 iRight = nodesToIndex(nodei, nodej, nodei, nodej + 1);
+
+                if (x[iUp] < 0)
+                {
+                    outCurrents.push_back(iUp);
+                }
+
+                if (x[iRight] > 0)
+                {
+                    outCurrents.push_back(iRight);
+                }
                 //calculate maximun current
                 if (pastPtr == iUp)
                     iMax = iRight;
                 else if (pastPtr == iRight)
                     iMax = iUp;
                 else
-                    iMax = calcCurrent(iUp, iRight);
+                    // iMax = calcCurrent(iUp, iRight);
+                    iMax = maxCurrent(outCurrents);
             }
             else
             {
@@ -702,6 +749,20 @@ void ResistorGrid::calculateSimplePath(const indexPair &nodes)
 
                 //outgoing down
                 iDown = nodesToIndex(nodei, nodej, nodei + 1, nodej);
+
+                if (x[iUp] < 0)
+                {
+                    outCurrents.push_back(iUp);
+                }
+                if (x[iDown] > 0)
+                {
+                    outCurrents.push_back(iDown);
+                }
+                if (x[iRight] > 0)
+                {
+                    outCurrents.push_back(iRight);
+                }
+
                 //calculate maximun current
                 if (pastPtr == iRight)
                     iMax = calcCurrent(iDown, iUp);
@@ -712,7 +773,8 @@ void ResistorGrid::calculateSimplePath(const indexPair &nodes)
 
                 else
                     //calculate maximun current
-                    iMax = calcCurrent(iUp, iDown, iRight);
+                    // iMax = calcCurrent(iUp, iDown, iRight);
+                    iMax = maxCurrent(outCurrents);
             }
         }
         //if we are at the right border
@@ -726,13 +788,24 @@ void ResistorGrid::calculateSimplePath(const indexPair &nodes)
                 iUp = nodesToIndex(nodei, nodej, nodei - 1, nodej);
                 //outgoing left
                 iLeft = nodesToIndex(nodei, nodej, nodei, nodej - 1);
+
+                if (x[iLeft] > 0)
+                {
+                    outCurrents.push_back(iLeft);
+                }
+                if (x[iUp] < 0)
+                {
+                    outCurrents.push_back(iUp);
+                }
+
                 //calculate maximun current
                 if (pastPtr == iUp)
                     iMax = iLeft;
                 else if (pastPtr == iLeft)
                     iMax = iUp;
                 else
-                    iMax = calcCurrent(iUp, iLeft);
+                    // iMax = calcCurrent(iUp, iLeft);
+                    iMax = maxCurrent(outCurrents);
             }
             else
             {
@@ -742,6 +815,20 @@ void ResistorGrid::calculateSimplePath(const indexPair &nodes)
                 iDown = nodesToIndex(nodei, nodej, nodei + 1, nodej);
                 //incoming left
                 iLeft = nodesToIndex(nodei, nodej, nodei, nodej - 1);
+
+                if (x[iLeft] < 0)
+                {
+                    outCurrents.push_back(iLeft);
+                }
+                if (x[iUp] < 0)
+                {
+                    outCurrents.push_back(iUp);
+                }
+                if (x[iDown] > 0)
+                {
+                    outCurrents.push_back(iDown);
+                }
+
                 //calculate maximun current
                 if (pastPtr == iUp)
                     iMax = calcCurrent(iDown, iLeft);
@@ -750,7 +837,8 @@ void ResistorGrid::calculateSimplePath(const indexPair &nodes)
                 else if (pastPtr == iLeft)
                     iMax = calcCurrent(iDown, iUp);
                 else
-                    iMax = calcCurrent(iUp, iDown, iLeft);
+                    // iMax = calcCurrent(iUp, iDown, iLeft);
+                    iMax = maxCurrent(outCurrents);
             }
         }
         //if we are at the bottom border
@@ -763,6 +851,20 @@ void ResistorGrid::calculateSimplePath(const indexPair &nodes)
             iRight = nodesToIndex(nodei, nodej, nodei, nodej + 1);
             //incoming left
             iLeft = nodesToIndex(nodei, nodej, nodei, nodej - 1);
+
+            if (x[iLeft] < 0)
+            {
+                outCurrents.push_back(iLeft);
+            }
+            if (x[iUp] < 0)
+            {
+                outCurrents.push_back(iUp);
+            }
+            if (x[iRight] > 0)
+            {
+                outCurrents.push_back(iRight);
+            }
+
             //calculate maximun current
             if (pastPtr == iRight)
                 iMax = calcCurrent(iUp, iLeft);
@@ -772,7 +874,8 @@ void ResistorGrid::calculateSimplePath(const indexPair &nodes)
                 iMax = calcCurrent(iUp, iRight);
 
             else
-                iMax = calcCurrent(iUp, iRight, iLeft);
+                // iMax = calcCurrent(iUp, iRight, iLeft);
+                iMax = maxCurrent(outCurrents);
         }
 
         //not on a border and not a corner
@@ -787,6 +890,23 @@ void ResistorGrid::calculateSimplePath(const indexPair &nodes)
             //outgoing right
             iRight = nodesToIndex(nodei, nodej, nodei, nodej + 1);
 
+            if (x[iLeft] < 0)
+            {
+                outCurrents.push_back(iLeft);
+            }
+            if (x[iUp] < 0)
+            {
+                outCurrents.push_back(iUp);
+            }
+            if (x[iDown] > 0)
+            {
+                outCurrents.push_back(iDown);
+            }
+            if (x[iRight] > 0)
+            {
+                outCurrents.push_back(iRight);
+            }
+
             //calculate maximun current
             if (pastPtr == iRight)
                 iMax = calcCurrent(iDown, iLeft, iUp);
@@ -797,40 +917,43 @@ void ResistorGrid::calculateSimplePath(const indexPair &nodes)
             else if (pastPtr == iUp)
                 iMax = calcCurrent(iDown, iRight, iLeft);
             else
-                iMax = calcCurrent(iUp, iDown, iRight, iLeft);
+                // iMax = calcCurrent(iUp, iDown, iRight, iLeft);
+                iMax = maxCurrent(outCurrents);
         }
 
-        //set the past pointer to the current pointer
+        //set the past pointer to the current path to be taken
         pastPtr = iMax;
         vectPath.push_back(nodePtr);
         moveRes = indexToNodes(iMax);
 
         if (iMax >= nodePtr)
         {
-            if (x[iMax] < 0)
-            {
-                nodePtr = calcNode(moveRes.row1, moveRes.col1);
-            }
-            else
-            {
-                nodePtr = calcNode(moveRes.row2, moveRes.col2);
-            }
+            nodePtr = calcNode(moveRes.row2, moveRes.col2);
+            // if (x[iMax] < 0)
+            // {
+            //     nodePtr = calcNode(moveRes.row1, moveRes.col1);
+            // }
+            // else
+            // {
+            //     nodePtr = calcNode(moveRes.row2, moveRes.col2);
+            // }
         }
         else
         {
-            if (x[iMax] < 0)
-            {
-                nodePtr = calcNode(moveRes.row2, moveRes.col2);
-            }
-            else
-            {
-                nodePtr = calcNode(moveRes.row1, moveRes.col1);
-            }
+            nodePtr = calcNode(moveRes.row1, moveRes.col1);
+            // if (x[iMax] < 0)
+            // {
+            //     nodePtr = calcNode(moveRes.row2, moveRes.col2);
+            // }
+            // else
+            // {
+            //     nodePtr = calcNode(moveRes.row1, moveRes.col1);
+            // }
         }
     } //end while
 
     simplePath = vectPath;
-}
+} // namespace anpi
 
 int ResistorGrid::calcNode(int row, int col)
 {
@@ -884,6 +1007,25 @@ int ResistorGrid::calcCurrent(int right, int left)
         iMax = left;
     }
     return iMax;
+}
+
+int ResistorGrid::maxCurrent(std::vector<int> &currents)
+{
+    int count = currents.size();
+    if (count == 0)
+    {
+        throw anpi::Exception("ResistorGrid::maxCurrent(): out currents vector is zero");
+    }
+    int max = currents[0];
+    double temp;
+
+    for (int i = 1; i < count; ++i)
+    {
+        temp = x[i];
+        if (temp > x[max])
+            max = currents[i];
+    }
+    return max;
 }
 
 } // namespace anpi

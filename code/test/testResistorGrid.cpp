@@ -117,10 +117,13 @@ void testNavigate()
     // Matrix<float> a(3, 4, 1);
     // a[2][1] = 0;
 
-    indexPair test = {1, 0, 0, 2};
+    indexPair test = {1, 0, 3, 4};
     // set the Matrix in ResistorGrid class since method uses size of internal matrix
     // rg.setRawMap(a);
-    std::string mapPath = std::string(ANPI_DATA_PATH) + "/5x4map.png";
+    std::string mapPath = std::string(ANPI_DATA_PATH) + "/6x4map.png";
+    // std::string mapPath = std::string(ANPI_DATA_PATH) + "/5x4map.png";
+    // std::string mapPath = std::string(ANPI_DATA_PATH) + "/3x2blank.png";
+    // std::string mapPath = std::string(ANPI_DATA_PATH) + "/10x12map.png";
     // ResistorGrid rg;
     rg.build(mapPath);
     rg.printRawMap();
@@ -133,6 +136,7 @@ void testNavigate()
 
     //test initial top right border
     test = {1, 0, 3, 4};
+    // test = {1, 0, 11, 9};
     rg.navigate(test);
 
     rg.calculateSimplePath(test);
@@ -152,7 +156,7 @@ void testNavigate()
 
     rg.printX();
 
-    std::cout << "\nPath to follow is: \n";
+    // std::cout << "\nPath to follow is: \n";
     rg.printSimplePath();
 } //end test navigate
 
