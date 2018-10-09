@@ -179,6 +179,25 @@ bool solveLU(const anpi::Matrix<T> &A,
   anpi::forwardSubstitution(L, Pb, y);
   anpi::backwardSubstitution(U, y, x);
 
+  //permute the result to have it ordered
+  T temp;
+  int pidx;
+  for (int i = 0; i < n; ++i)
+  {
+    pidx = p[i];
+    //if the index was permuted
+    if (i != pidx)
+    {
+      //permute x value
+      temp = x[i];
+      x[i] = x[pidx];
+      x[pidx] = temp;
+      //permute index in permutation
+      p[pidx] = pidx;
+      p[i] = i;
+    }
+  }
+
   return 1;
 }
 

@@ -22,7 +22,7 @@
 #include "Matrix.hpp"
 #include "Allocator.hpp"
 
-BOOST_AUTO_TEST_SUITE(Matrix2)
+BOOST_AUTO_TEST_SUITE(Matrix)
 
 /// Benchmark for subtraction operations
 template <typename T>
