@@ -8,7 +8,7 @@ calculate the value of the currents flowing through a Matrix of resistors, which
 by a robot, and the value of the resistors represents the ease of that path, which depends on a provided black and white image,
 where the black parts are blocks and the white parts movable space. 
 The program intends to find a route between two provided nodes of the map using the outgoing current with the higher absolute 
-value, and by using vectors that re[resent the general movement of a particle in a forcefield.
+value, and by using vectors that represent the general movement of a particle in a forcefield.
 
 
 CONTACT
@@ -17,7 +17,7 @@ This project can be found at GitHub in:
 https://github.com/h4koo/ANPI_Proyecto2
 
 ______________________________________________________________________________________________________________________________
-_________________________________________________Run Instructions_____________________________________________________________
+_________________________________________________Build Instructions_____________________________________________________________
 ______________________________________________________________________________________________________________________________
 
 
@@ -45,6 +45,10 @@ And build everything with
 
 The executables will be stored at build/bin.
 
+______________________________________________________________________________________________________________________________
+_________________________________________________Run Instructions_____________________________________________________________
+______________________________________________________________________________________________________________________________
+
 To execute the program go to the /build/bin directory
 
 > cd build/bin
@@ -54,7 +58,8 @@ executables by using for example
 
 >./proyecto2
 
-When you run proyecto2 you will only receive the demo code of the imageopening up on a viewer.
+When you run proyecto2 you will only receive the demo code of the image opening up on a viewer.
+
 
 +++++++++++++++++++++++++++++++++ Benchmarks +++++++++++++++++++++++++++++++++++++++++++++++++++++
 
@@ -68,7 +73,8 @@ The SIMD optimization for the LU algorithm and it's solver were not implemented.
 
 ********************************** Tests *********************************************************
 
-Several small and simple maps were created for the purpose of testig the methods.
+Several small and simple maps were created for the purpose of testing the methods. These were created
+using GIMP and are located on the ./code/data/ directory of the project folder.
 
 To run all tests you can simply run
 
@@ -86,7 +92,8 @@ ________________________________________________________________________________
 ______________________________________________________Dependencies________________________________________________________
 __________________________________________________________________________________________________________________________
 
-You need openCV, CMAKE and Boost to build the program
+You need openCV, CMAKE and Boost to build this program
 
 > sudo apt-get install libboost-all-dev
 > sudo apt-get -y install cmake
+> sudo apt-get install libopencv-dev python3-opencv
