@@ -198,12 +198,9 @@ class ResistorGrid
     int calcCurrent(int Up, int Dowm, int Right, int Left);
     int calcCurrent(int down, int right, int left);
     int calcCurrent(int right, int left);
-<<<<<<< HEAD
 
     int maxCurrent(std::vector<int> &currents);
-=======
     void calcDesplazamiento();
->>>>>>> 189bfde999898ccb15318ba16450ae108b151b00
 };
 
 } // namespace anpi
