@@ -20,33 +20,35 @@
 #include <Matrix.hpp>
 #include <PlotPy.hpp>
 
-
-namespace anpi {
-  namespace benchmark {
-    /**
+namespace anpi
+{
+namespace benchmark
+{
+/**
      * Each measurement is composed by five attributes
      */
-    struct measurement {
-      inline measurement() : size(0u),average(0.),stddev(0.),min(0.),max(0.) {};
-      
-      size_t size;
-      double average;
-      double stddev;
-      double min;
-      double max;
-    };
+struct measurement
+{
+  inline measurement() : size(0u), average(0.), stddev(0.), min(0.), max(0.){};
 
-    template<typename T>
-    inline T sqr(const T val) { return val*val; }
-    
-    /**
+  size_t size;
+  double average;
+  double stddev;
+  double min;
+  double max;
+};
+
+template <typename T>
+inline T sqr(const T val) { return val * val; }
+
+/**
      * Compute measurement statistics for each size
      */
-    void computeStats(const std::vector<size_t>& sizes,
-                      const anpi::Matrix<std::chrono::duration<double> >& mat,
-                      std::vector<measurement>& times);
+void computeStats(const std::vector<size_t> &sizes,
+                  const anpi::Matrix<std::chrono::duration<double>> &mat,
+                  std::vector<measurement> &times);
 
-    /**
+/**
      * Save a file with each measurement in a row.
      *
      * The meaning of the columns is as follows:
@@ -56,16 +58,16 @@ namespace anpi {
      * # Minimum
      * # Maximum  
      */
-    void write(std::ostream& stream,
-               const std::vector<measurement>& m);
+void write(std::ostream &stream,
+           const std::vector<measurement> &m);
 
-    /**
+/**
      * Save a file with each measurement in a row
      */
-    void write(const std::string& filename,
-               const std::vector<measurement>& m);
+void write(const std::string &filename,
+           const std::vector<measurement> &m);
 
-    /**
+/**
      * Plot measurements (average only)
      *
      * The meaning of the columns is as follows:
@@ -75,11 +77,11 @@ namespace anpi {
      * # Minimum
      * # Maximum  
      */
-    void plot(const std::vector<measurement>& m,
-              const std::string& legend,
-              const std::string& color = "r");
+void plot(const std::vector<measurement> &m,
+          const std::string &legend,
+          const std::string &color = "r");
 
-    /**
+/**
      * Plot measurements (average only)
      *
      * The meaning of the columns is as follows:
@@ -89,17 +91,25 @@ namespace anpi {
      * # Minimum
      * # Maximum  
      */
-    void plotRange(const std::vector<measurement>& m,
-                   const std::string& legend,
-                   const std::string& color);
+void plotRange(const std::vector<measurement> &m,
+               const std::string &legend,
+               const std::string &color);
 
-    /**
+/**
+     * Plot x and y rute of circuit
+     */
+void plotPath(const std::vector<float> &x,
+              const std::vector<float> &y,
+              const std::string &legend,
+              const std::string &color);
+
+/**
      * Show all registered plots.
      */
-    void show();
-  } // namespace benchmark
+void show();
+} // namespace benchmark
 } // namespace anpi
-    
+
 /**
  * Meassure the time for all given sizes.
  * @param sizes  vector with all sizes to be tested
@@ -120,39 +130,40 @@ namespace anpi {
  * - s    holds the index of the current evaluated size
  * - i    index of the current repetition
  */
-#define ANPI_BENCHMARK(sizes,rep,times,bench)                      \
-{                                                                  \
-  /* number of sizes to be tested */                               \
-  const size_t _nums = sizes.size();                               \
-                                                                   \
-  typedef std::chrono::duration<double> durat;                     \
-                                                                   \
-  /* each row holds a particular size */                           \
-  ::anpi::Matrix<durat> _mat(_nums,rep,::anpi::DoNotInitialize);   \
-                                                                   \
-  /* test each size */                                             \
-  for (size_t s=0;s<_nums;++s ) {                                  \
-    const size_t size = sizes[s];                                  \
-                                                                   \
-    std::cout << "Testing size " << size << std::endl;             \
-                                                                   \
-    durat* _row = _mat[s];                                         \
-                                                                   \
-    /* prefix code for initialization before measurement */        \
-    bench.prepare(size);                                           \
-                                                                   \
-    const auto _start = std::chrono::high_resolution_clock::now(); \
-                                                                   \
-    for ( size_t i=0;i<rep;++i ) {                                 \
-      /* the code to be benchmarked */                             \
-      bench.eval();                                                \
-                                                                   \
-      _row[i] = std::chrono::high_resolution_clock::now()-_start;  \
-    }                                                              \
-  }                                                                \
-                                                                   \
-  ::anpi::benchmark::computeStats(sizes,_mat,times);               \
-}
-
+#define ANPI_BENCHMARK(sizes, rep, times, bench)                      \
+  {                                                                   \
+    /* number of sizes to be tested */                                \
+    const size_t _nums = sizes.size();                                \
+                                                                      \
+    typedef std::chrono::duration<double> durat;                      \
+                                                                      \
+    /* each row holds a particular size */                            \
+    ::anpi::Matrix<durat> _mat(_nums, rep, ::anpi::DoNotInitialize);  \
+                                                                      \
+    /* test each size */                                              \
+    for (size_t s = 0; s < _nums; ++s)                                \
+    {                                                                 \
+      const size_t size = sizes[s];                                   \
+                                                                      \
+      std::cout << "Testing size " << size << std::endl;              \
+                                                                      \
+      durat *_row = _mat[s];                                          \
+                                                                      \
+      /* prefix code for initialization before measurement */         \
+      bench.prepare(size);                                            \
+                                                                      \
+      const auto _start = std::chrono::high_resolution_clock::now();  \
+                                                                      \
+      for (size_t i = 0; i < rep; ++i)                                \
+      {                                                               \
+        /* the code to be benchmarked */                              \
+        bench.eval();                                                 \
+                                                                      \
+        _row[i] = std::chrono::high_resolution_clock::now() - _start; \
+      }                                                               \
+    }                                                                 \
+                                                                      \
+    ::anpi::benchmark::computeStats(sizes, _mat, times);              \
+  }
 
 #endif

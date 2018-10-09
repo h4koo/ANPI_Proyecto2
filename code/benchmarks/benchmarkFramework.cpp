@@ -106,10 +106,6 @@ void plot(const std::vector<measurement> &m,
     x[i] = m[i].size;
     y[i] = m[i].average;
   }
-
-  static anpi::Plot2d<double> plotter;
-  plotter.initialize(1);
-  plotter.plot(x, y, legend, color);
 }
 
 /**
@@ -140,6 +136,17 @@ void plotRange(const std::vector<measurement> &m,
   static anpi::Plot2d<double> plotter;
   plotter.initialize(1);
   plotter.plot(x, y, miny, maxy, legend, color);
+}
+
+void plotPath(const std::vector<float> &x,
+              const std::vector<float> &y,
+              const std::string &legend,
+              const std::string &color)
+{
+  static anpi::Plot2d<float> plotter;
+  plotter.initialize(1);
+  plotter.plot(x, y, legend, color);
+  plotter.show();
 }
 
 void show()
